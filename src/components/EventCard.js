@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import '../styles/Card.css'
 export default function EventCard() {
     return (
@@ -5,7 +6,10 @@ export default function EventCard() {
             <h1>EventCard</h1>
             <p>Event description</p>
             <p>Event goal amount</p>
-            <button>Learn More</button>
+            <p>num of People recieving boba</p>
+            <Link to={`Event/:id`}>
+                <button>Learn More</button>
+            </Link>
         </div>
     );
 }

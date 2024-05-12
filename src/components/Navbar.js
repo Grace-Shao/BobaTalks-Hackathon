@@ -76,7 +76,10 @@ function Navbar() {
               }}
             >
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <MenuItem>
+              <MenuItem
+                component={Link}
+                to="/"
+              >
                 <Typography variant="body2" color="text.primary">
                 <h3 style={{color:'black', paddingLeft:'10px'}}>Boba Talks</h3>
                 </Typography>

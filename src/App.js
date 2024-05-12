@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/EventsPage" element={<EventsPage/>}/>
+        <Route path="/Event/:id" element={<EventsPage/>}/>
         <Route path="/CreateEventPage" element={<CreateEventPage/>}/>
       </Routes>
     </Router>
