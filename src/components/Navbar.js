@@ -87,7 +87,16 @@ function Navbar() {
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant="body2" color="text.primary">
-                    Event
+                    All Events
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/CreateEventPage"
+                  sx={{ py: '6px', px: '12px' }}
+                >
+                  <Typography variant="body2" color="text.primary">
+                    Create Event
                   </Typography>
                 </MenuItem>
                 <MenuItem
