@@ -9,6 +9,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 
 function Navbar() {
@@ -75,15 +76,14 @@ function Navbar() {
               }}
             >
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <MenuItem
-                 
-                >
-                  <Typography variant="body2" color="text.primary">
-                  <h3 style={{color:'black', paddingLeft:'10px'}}>Boba Talks</h3>
-                  </Typography>
-                </MenuItem>
+              <MenuItem>
+                <Typography variant="body2" color="text.primary">
+                <h3 style={{color:'black', paddingLeft:'10px'}}>Boba Talks</h3>
+                </Typography>
+              </MenuItem>
                 <MenuItem
-                  onClick={() => scrollToSection('features')}
+                  component={Link}
+                  to="/EventsPage"
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant="body2" color="text.primary">
