@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
+import express from "express"
+const router = express.Router()
 
 /* GET home page. */
 router.get('/', function(req, res) {
   res.json({ message: 'Welcome to the API'})
 });
 
-module.exports = router;
+export default router
