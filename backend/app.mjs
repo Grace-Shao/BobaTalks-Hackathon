@@ -9,6 +9,10 @@ import indexRouter from './routes/index.mjs'
 import eventsRouter from './routes/events.mjs'
 
 const app = express()
+
+// allow express to parse json bodies in requests
+app.use(express.json()); 
+
 const port = process.env.PORT || 8080;
 
 app.use('/', indexRouter)
