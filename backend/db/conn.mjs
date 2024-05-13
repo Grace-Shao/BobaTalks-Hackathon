@@ -8,5 +8,5 @@ try {
 } catch(e) {
   console.error(e)
 }
-let db = conn.db("server_boba")
+let db = conn.db("boba_server")
 export default db

@@ -45,7 +45,7 @@ router.patch("/comment/:id", async (req, res) => {
     $push: { comments: req.body }
   };
 
-  let collection = await db.collection("posts");
+  let collection = await db.collection("events");
   let result = await collection.updateOne(query, updates);
 
   res.send(result).status(200);
@@ -57,7 +57,7 @@ router.patch("/comment/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const query = { _id: ObjectId(req.params.id) };
 
-  const collection = db.collection("posts");
+  const collection = db.collection("events");
   let result = await collection.deleteOne(query);
 
   res.send(result).status(200);
