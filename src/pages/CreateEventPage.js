@@ -1,9 +1,20 @@
 import '../styles/CreateEventPage.css';
 import Navbar from '../components/Navbar';
+import Container from '@mui/material/Container';
+
 export default function CreateEventPage() {
     return (
         <div>
             <Navbar />
+            <Container
+                sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                pt: { xs: 14, sm: 20 },
+                pb: { xs: 8, sm: 12 },
+                }}
+            >
             <h1>RecieverPage</h1>
             <form>
                 <label htmlFor="eventName">Event Name:</label>
@@ -23,6 +34,7 @@ export default function CreateEventPage() {
 
                 <button type="submit">Create Campaign</button>
             </form>
+            </Container>
         </div>
     );
   }
