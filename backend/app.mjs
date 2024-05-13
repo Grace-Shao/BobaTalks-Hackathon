@@ -5,8 +5,6 @@ import "express-async-errors";
 
 console.log(process.env)
 
-import db from "./db/conn.mjs"
-
 import indexRouter from './routes/index.mjs'
 import eventsRouter from './routes/events.mjs'
 
