@@ -1,2 +1,2 @@
 Team Members: 
-Grace, Color, Hydra, Baos, Natasha (SemiColon)
+Grace, Color, Hydra, Natasha (natashaithink), Natasha (SemiColon)

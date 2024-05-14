@@ -132,8 +132,7 @@ function Navbar() {
                 variant="text"
                 size="small"
                 component="a"
-                href=""
-                target="_blank"
+                href="/SignIn"
               >
                 Sign in
               </Button>
@@ -142,8 +141,7 @@ function Navbar() {
                 variant="contained"
                 size="small"
                 component="a"
-                href=""
-                target="_blank"
+                href="/SignUp"
               >
                 Sign up
               </Button>
