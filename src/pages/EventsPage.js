@@ -1,9 +1,24 @@
+import { useState, useEffect } from 'react';
 import EventCard from "../components/EventCard";
 import Navbar from "../components/Navbar";
+import axios from 'axios';
 import Container from '@mui/material/Container';
 
 export default function EventsPage() {
+  const [events, setEvents] = useState([]); 
+  useEffect(() => {
+    axios.get('http://localhost:5000/events')
+      .then(response => {
+        console.log("response", response.data);
+        setEvents(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }, []);
+    
     return (
+
       <Container
         sx={{
           display: 'flex',
@@ -15,11 +30,11 @@ export default function EventsPage() {
       >
         <Navbar />
         <h1>Events</h1>
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
+        {
+          events && events.length > 0 ? events.map((event, index) => 
+            <EventCard key={index} event={event} />
+          ) : <h3>No events found</h3>
+        }
       </Container>
     );
   }
