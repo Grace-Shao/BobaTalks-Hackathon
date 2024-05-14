@@ -1,15 +1,15 @@
 import express from "express"
+import cors from 'cors';
 import path from "path"
 import "./loadEnv.mjs"
 import "express-async-errors";
-
-console.log(process.env)
-
 import indexRouter from './routes/index.mjs'
 import eventsRouter from './routes/events.mjs'
 
-const app = express()
+console.log(process.env)
 
+const app = express()
+app.use(cors());
 // allow express to parse json bodies in requests
 app.use(express.json()); 
 
