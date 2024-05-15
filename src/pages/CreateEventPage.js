@@ -5,8 +5,8 @@ import axios from 'axios';
 import { useState } from 'react';
 
 export default function CreateEventPage() {
-    const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: '', numOfPeople: '', uploadPhotos: ''})
-    const numberFields = ['goalAmount']; // add any other number fields here
+    const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: ''})
+    const numberFields = ['goal_amount']; // add any other number fields here
 
     const createEvent = async (event) => {
         event.preventDefault();
@@ -59,12 +59,6 @@ export default function CreateEventPage() {
 
                 <label htmlFor="goal_amount">Goal Amount:</label>
                 <input type="number" id="goal_amount" name="goal_amount" onChange={handleChange} />
-
-                {/* <label htmlFor="num_of_people">Number of People:</label>
-                <input type="number" id="num_of_people" name="num_of_people" onChange={handleChange} /> */}
-                
-                {/* <label htmlFor="upload_photos">Upload Photos:</label>
-                <input type="file" id="upload_photos" name="upload_photos" accept="image/*" multiple onChange={handleChange} /> */}
 
                 <button type="submit">Create Campaign</button>
             </form>
