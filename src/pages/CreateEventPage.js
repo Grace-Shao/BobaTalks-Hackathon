@@ -1,8 +1,33 @@
 import '../styles/CreateEventPage.css';
 import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
+import axios from 'axios';
+import { useState } from 'react';
 
 export default function CreateEventPage() {
+    const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: '', numOfPeople: '', uploadPhotos: ''})
+    const numberFields = ['goalAmount']; // add any other number fields here
+
+    const createEvent = async (event) => {
+        event.preventDefault();
+        axios.post('http://localhost:5000/events', post)
+            .then(response => {
+                console.log(response.data);
+                alert('Event successfully created!');
+
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+    const handleChange = (event) => {
+        // form input element that the user is interacting with
+        const {name, value} = event.target;
+        setPost(prevPost => ({
+            ...prevPost, 
+            [name]: numberFields.includes(name) ? Number(value) : value
+        }));
+    }
     return (
         <div>
             <Navbar />
@@ -15,22 +40,31 @@ export default function CreateEventPage() {
                 pb: { xs: 8, sm: 12 },
                 }}
             >
-            <h1>RecieverPage</h1>
-            <form>
-                <label htmlFor="eventName">Event Name:</label>
-                <input type="text" id="eventName" name="eventName" />
+            <h1>Create an Event</h1>
+            <form onSubmit={createEvent}>
+                <label htmlFor="event_name">Event Name:</label>
+                <input type="text" id="event_name" name="event_name" onChange={handleChange} />
 
-                <label htmlFor="eventDescription">Event Description:</label>
-                <input type="text" id="eventDescription" name="eventDescription" />
+                <label htmlFor="event_owner">Event Owner:</label>
+                <input type="text" id="event_owner" name="event_owner" onChange={handleChange} />
 
-                <label htmlFor="goalAmount">Goal Amount:</label>
-                <input type="number" id="goalAmount" name="goalAmount" />
+                <label htmlFor="event_description">Event Description:</label>
+                <input type="text" id="event_description" name="event_description" onChange={handleChange} />
 
-                <label htmlFor="numOfPeople">Number of People:</label>
-                <input type="number" id="numOfPeople" name="numOfPeople" />
+                <label htmlFor="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" onChange={handleChange} />
+
+                <label htmlFor="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" onChange={handleChange} />
+
+                <label htmlFor="goal_amount">Goal Amount:</label>
+                <input type="number" id="goal_amount" name="goal_amount" onChange={handleChange} />
+
+                {/* <label htmlFor="num_of_people">Number of People:</label>
+                <input type="number" id="num_of_people" name="num_of_people" onChange={handleChange} /> */}
                 
-                <label htmlFor="uploadPhotos">Upload Photos:</label>
-                <input type="file" id="uploadPhotos" name="uploadPhotos" accept="image/*" multiple />
+                {/* <label htmlFor="upload_photos">Upload Photos:</label>
+                <input type="file" id="upload_photos" name="upload_photos" accept="image/*" multiple onChange={handleChange} /> */}
 
                 <button type="submit">Create Campaign</button>
             </form>
