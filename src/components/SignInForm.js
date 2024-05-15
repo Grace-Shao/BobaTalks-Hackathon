@@ -9,9 +9,22 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    custom: {
+      main: '#FFFFFF',
+      light: '#FFFFFF',
+      dark: '#FFFFFF',
+      contrastText: '#FFFFFF',
+    },
+  },
+});
 
 export default function SignInForm() {
   return (
+    <ThemeProvider theme={theme}>
       <Container
         sx={{
           display: 'flex',
@@ -19,37 +32,26 @@ export default function SignInForm() {
           alignItems: 'center',
           pt: { xs: 14, sm: 20 },
           pb: { xs: 8, sm: 12 },
+          // px: {xs: 80, sm:80},
+          width: '100%',
+          bgcolor: '#EDAB6F',
         }}
       >
-        <Card sx={{ minWidth: 275 }}>
-      <CardContent sx={{textAlign: 'center'}}>
-        <Typography sx={{ fontSize: 14}} color="text.secondary" gutterBottom>
-          Returning User?
-        </Typography>
-        <Typography sx={{padding: 2}} variant="h4" component="div">
-          Sign In
-        </Typography>
-        <form>
-                <label sx={{padding: 2}}>Email</label>
-                <input type="text" id="email" name="email" />
 
-                <label sx={{padding: 2}}>Password</label>
-                <input sx={{paddingTop: 2}} type="text" id="pw" name="pw" />
+        <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold'}} variant="h4" component="div">
+          Enter account details
+        </Typography>
+        <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF'}} 
+        id="outlined-basic" label="Full Name" variant="outlined" />
+        <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF'}} 
+        id="outlined-basic" label="Email Address" variant="outlined" />
+        <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF'}} 
+        id="outlined-basic" label="Password" variant="outlined" />
+        <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF'}} 
+        id="outlined-basic" label="Confirm Password" variant="outlined" />
+        <Button sx={{mt: 1}} color="custom" variant="outlined" href="/SignIn"> Register </Button>
 
-                <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
-                type="submit"
-                sx={{padding: 2}}
-              >
-                Sign in
-              </Button>
-            </form>
-      </CardContent>
-     
-    </Card>
       </Container>
+      </ThemeProvider>
   );
 }

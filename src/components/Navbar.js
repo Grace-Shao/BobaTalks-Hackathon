@@ -10,7 +10,18 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+const theme = createTheme({
+  palette: {
+    custom: {
+      main: '#FFFFFF',
+      light: '#FFFFFF',
+      dark: '#FFFFFF',
+      contrastText: '#FFFFFF',
+    },
+  },
+});
 
 function Navbar() {
   const [open, setOpen] = React.useState(false);
@@ -35,6 +46,7 @@ function Navbar() {
 
   return (
     <div>
+      <ThemeProvider theme={theme}>
       <AppBar
         position="fixed"
         sx={{
@@ -52,14 +64,17 @@ function Navbar() {
               alignItems: 'center',
               justifyContent: 'space-between',
               flexShrink: 0,
-              bgcolor:
-                theme.palette.mode === 'light'
-                  ? 'rgba(255, 255, 255, 0.4)'
-                  : 'rgba(0, 0, 0, 0.4)',
+              bgcolor: '#EDAB6F',
               backdropFilter: 'blur(24px)',
-              maxHeight: 40,
+              maxHeight: 100,
               border: '1px solid',
               borderColor: 'divider',
+              width: '100%',
+              ml: '-50px',
+              pl: '100px',
+              pr: '100px',
+              pt: '0',
+              px: '100%',
               boxShadow:
                 theme.palette.mode === 'light'
                   ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
@@ -81,7 +96,7 @@ function Navbar() {
                 to="/"
               >
                 <Typography variant="body2" color="text.primary">
-                <h3 style={{color:'black', paddingLeft:'10px'}}>Boba Talks</h3>
+                <h3 style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>Boba Talks</h3>
                 </Typography>
               </MenuItem>
                 <MenuItem
@@ -89,34 +104,25 @@ function Navbar() {
                   to="/EventsPage"
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="text.primary">
+                  {/* <Typography style={{color:'white'}} variant="body2" color="text.primary">
                     All Events
-                  </Typography>
+                  </Typography> */}
+                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>All Events</h4>
                 </MenuItem>
                 <MenuItem
                   component={Link}
                   to="/CreateEventPage"
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="text.primary">
-                    Create Event
-                  </Typography>
+
+                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Create Event</h4>
                 </MenuItem>
                 <MenuItem
                   onClick={() => scrollToSection('testimonials')}
                   sx={{ py: '6px', px: '12px' }}
                 >
-                  <Typography variant="body2" color="text.primary">
-                    Receiver
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('faq')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Sender
-                  </Typography>
+
+                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Manage Event</h4>
                 </MenuItem>
               </Box>
             </Box>
@@ -128,19 +134,15 @@ function Navbar() {
               }}
             >
               <Button
-                color="primary"
-                variant="text"
-                size="small"
-                component="a"
+                color="custom"
+                variant="outlined" 
                 href="/SignIn"
               >
                 Sign in
               </Button>
               <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
+                color="custom"
+                variant="outlined"
                 href="/SignUp"
               >
                 Sign up
@@ -160,6 +162,7 @@ function Navbar() {
           </Toolbar>
         </Container>
       </AppBar>
+      </ThemeProvider>
     </div>
   );
 }

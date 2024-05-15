@@ -15,24 +15,17 @@ export default function Hero() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pt: { xs: 14, sm: 20 },
-          pb: { xs: 8, sm: 12 },
+          pt: { xs: 12, sm: 12 },
+          pb: { xs: 12, sm: 12 },
+          backgroundColor: '#D3E9FF',
+          // width:'100%',
+          // height:'100%'
         }}
       >
-        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
-          <Typography
-            variant="h1"
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              alignSelf: 'center',
-              textAlign: 'center',
-              fontSize: 'clamp(3.5rem, 10vw, 4rem)',
-            }}
-          >
-            Boba-Talk Hackathon
-            </Typography>
-          </Stack>
+        <img draggable="false" src={require('./mascot.png')} />
+        {/* <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '100%' } }}>
+        
+          </Stack> */}
           
       </Container>
   );

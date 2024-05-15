@@ -5,17 +5,6 @@ form {
     align-items: center;
 }
 
-/* Styles for form inputs */
-input[type="text"],
-input[type="number"],
-textarea {
-    width: 50%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
 /* Styles for form submit button */
 button[type="submit"] {
     padding: 10px 20px;
