@@ -3,8 +3,10 @@ import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import axios from 'axios';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-export default function CreateEventPage() {
+export default function DonatePage() {
+    const { id } = useParams();
     const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: ''})
     const numberFields = ['goal_amount']; // add any other number fields here
 
@@ -40,27 +42,21 @@ export default function CreateEventPage() {
                 pb: { xs: 8, sm: 12 },
                 }}
             >
-            <h1>Create an Event</h1>
+            <h1>Donate</h1>
             <form onSubmit={createEvent}>
-                <label htmlFor="event_name">Event Name:</label>
+                <label htmlFor="event_name">Your Name (optional):</label>
                 <input type="text" id="event_name" name="event_name" onChange={handleChange} />
 
-                <label htmlFor="event_owner">Event Owner:</label>
+                <label htmlFor="event_owner">Your Email:</label>
                 <input type="text" id="event_owner" name="event_owner" onChange={handleChange} />
 
-                <label htmlFor="event_description">Event Description:</label>
+                <label htmlFor="event_description">Payment Method:</label>
                 <input type="text" id="event_description" name="event_description" onChange={handleChange} />
-
-                <label htmlFor="start_date">Start Date:</label>
-                <input type="date" id="start_date" name="start_date" onChange={handleChange} />
-
-                <label htmlFor="end_date">End Date:</label>
-                <input type="date" id="end_date" name="end_date" onChange={handleChange} />
 
                 <label htmlFor="goal_amount">Goal Amount:</label>
                 <input type="number" id="goal_amount" name="goal_amount" onChange={handleChange} />
 
-                <button type="submit">Create Campaign</button>
+                <button type="submit">Submit</button>
             </form>
             </Container>
         </div>
