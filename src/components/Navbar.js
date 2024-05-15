@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import '../styles/style.css';
 
 const theme = createTheme({
   palette: {
@@ -56,7 +57,7 @@ function Navbar() {
           mt: 2,
         }}
       >
-        <Container maxWidth="lg">
+        <Container className="navbar-no-space" maxWidth="lg">
           <Toolbar
             variant="regular"
             sx={(theme) => ({
@@ -69,10 +70,9 @@ function Navbar() {
               maxHeight: 100,
               border: '1px solid',
               borderColor: 'divider',
-              width: '100%',
-              ml: '-50px',
-              pl: '100px',
-              pr: '100px',
+              // width: '100%',
+              // pl: '100px',
+              // pr: '100px',
               pt: '0',
               px: '100%',
               boxShadow:

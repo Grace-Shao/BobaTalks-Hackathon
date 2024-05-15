@@ -18,3 +18,14 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #0056b3;
 }
+
+.width-no-space {
+    max-width: 2200px !important;
+}
+
+.navbar-no-space {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    max-width: 2200px !important;
+    margin-top: -16px;
+}

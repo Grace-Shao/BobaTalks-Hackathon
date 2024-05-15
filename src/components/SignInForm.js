@@ -10,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import '../styles/style.css';
 
 const theme = createTheme({
   palette: {
@@ -26,6 +27,8 @@ export default function SignInForm() {
   return (
     <ThemeProvider theme={theme}>
       <Container
+      className = "width-no-space"
+      disableGutters
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -33,6 +36,7 @@ export default function SignInForm() {
           pt: { xs: 14, sm: 20 },
           pb: { xs: 8, sm: 12 },
           // px: {xs: 80, sm:80},
+          maxWidth: 0,
           width: '100%',
           bgcolor: '#EDAB6F',
         }}

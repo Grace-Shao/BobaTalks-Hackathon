@@ -1,4 +1,4 @@
-import '../styles/CreateEventPage.css';
+import '../styles/style.css';
 import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 

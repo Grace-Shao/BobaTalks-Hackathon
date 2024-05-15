@@ -7,16 +7,20 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import '../styles/style.css';
 
 export default function Hero() {
   return (
       <Container
+      className = "width-no-space"
+        disableGutters
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           pt: { xs: 12, sm: 12 },
           pb: { xs: 12, sm: 12 },
+          px: 0,
           backgroundColor: '#D3E9FF',
           // width:'100%',
           // height:'100%'
