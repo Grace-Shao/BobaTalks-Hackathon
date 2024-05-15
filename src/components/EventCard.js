@@ -16,7 +16,7 @@ export default function EventCard({event}) {
             {isExpanded && (
                 <>
                     <p>{event.event_description}</p>
-                    <Link to={`Event/:id`}>
+                    <Link to={`DonatePage/${event._id}`}>
                         <button className="donateButton">Donate</button>
                     </Link>
                 </>

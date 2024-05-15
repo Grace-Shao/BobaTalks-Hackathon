@@ -32,7 +32,7 @@ export default function EventsPage() {
         <h1>Events</h1>
         {
           events && events.length > 0 ? events.map((event, index) => 
-            <EventCard key={index} event={event} />
+            <EventCard event={event} />
           ) : <h3>No events found</h3>
         }
       </Container>
