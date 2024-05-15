@@ -4,14 +4,26 @@ const router = express.Router()
 import db from "../db/conn.mjs"
 
 /**
- * Fetches all events
+ * Fetches all events that the user should be able to see
  */
 router.get('/', async (req, res) => {
   let collection = await db.collection("events")
-  let results = await collection.find({})
-    .toArray()
+  
+  // Get today's date
+  let today = new Date()
+  // Reset hours, minutes, seconds and milliseconds to make it start of the day
+  today.setHours(0, 0, 0, 0)
+  
+  let results = await collection.find({
+    // Check current money is less than target money
+    $expr: { $lt: ["$current_money", "$target_money"] },
+    // Check if deadline is after today
+    deadline: {
+      $gt: today.toISOString() // Use ISO string for date comparison
+    }
+  }).toArray();
 
-  res.send(results).status(200)
+  res.status(200).send(results)
 });
 
 /**
@@ -30,11 +42,45 @@ router.get("/:id", async (req, res) => {
  * Adds a new document to the collection
  */
 router.post("/", async (req, res) => {
-  let collection = await db.collection("events")
-  let newDocument = req.body
-  
-  let result = await collection.insertOne(newDocument)
-  res.send(result).status(204)
+  const { current_money, target_money, event_name, event_owner, deadline } = req.body;
+
+  // Validate current_money is non-negative
+  if (current_money === undefined || 
+    typeof(current_money) !== 'number' || 
+    current_money < 0) {
+      return res.status(400).send({ error: 'current_money must be a non-negative number' })
+  }
+
+  // Validate target_money is greater than 0
+  if (target_money === undefined || 
+    typeof(target_money) !== 'number' || 
+    target_money <= 0) {
+      return res.status(400).send({ error: 'target_money must be greater than 0' });
+  }
+
+  // Validate event_owner
+  if (typeof event_name !== 'string' || 
+  event_name.trim() === '') {
+      return res.status(400).send({ error: 'event_owner must be a non-empty string' })
+  }
+
+  // Validate deadline as a date
+  if (isNaN(Date.parse(deadline))) {
+    return res.status(400).send({ error: 'deadline must be a valid datetime' });
+  }
+
+  let newDocument = {
+    current_money,
+    target_money,
+    event_name,
+    event_owner,
+    deadline: new Date(deadline)
+  };
+
+  let collection = await db.collection("events");
+  let result = await collection.insertOne(newDocument);
+
+  res.status(201).send(result);
 });
 
 /**
