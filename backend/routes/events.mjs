@@ -32,12 +32,33 @@ router.get("/", async (req, res) => {
  * Get a single event by ID
  */
 router.get("/:id", async (req, res) => {
+  const { username } = req.body;
   let collection = await db.collection("events");
   let query = { _id: ObjectId.createFromHexString(req.params.id) };
   let result = await collection.findOne(query);
 
   if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
+  else {
+    let today = new Date();
+    let endDate = new Date(result.end_date);
+
+    let owner = result.event_owner;
+
+    if (owner !== username) {
+      if (endDate < today) {
+        res.send("The event has passed!").status(404);
+      } else {
+        let currAmt = result.current_money;
+        let targetAmt = result.goal_amount;
+
+        if (currAmt >= targetAmt) {
+          res.send("The target amount has been reached!").status(404);
+        } else {
+          res.send(result).status(200);
+        }
+      }
+    } else res.send(result).status(200);
+  }
 });
 
 /**
@@ -182,11 +203,9 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     // General error handling
     console.error("Failed to delete event:", error);
-    res
-      .status(500)
-      .send({
-        message: "Failed to delete event due to internal server error.",
-      });
+    res.status(500).send({
+      message: "Failed to delete event due to internal server error.",
+    });
   }
 });
 
