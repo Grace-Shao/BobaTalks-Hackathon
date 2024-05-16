@@ -1,7 +1,32 @@
 .card {
-    outline: 1px solid black;
+    outline: 2px solid white;
     width: 80%;
     border-radius: 10px;
     padding: 10px; 
     margin: 15px; 
+    background-color: #EDAB6F;
+    color: white;
 }
+/* 
+.card p:nth-child(4){
+    float: right;
+    color: red;
+
+}
+
+.card p:nth-child(2){
+    width: 50%;
+    float: left;
+  } */
+
+  .column {
+    float: left;
+    width: 50%;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }

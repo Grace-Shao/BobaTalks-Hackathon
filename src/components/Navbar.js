@@ -96,7 +96,7 @@ function Navbar() {
                 to="/"
               >
                 <Typography variant="body2" color="text.primary">
-                <h3 style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>Boba Talks</h3>
+                <h3 style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>BobaShare</h3>
                 </Typography>
               </MenuItem>
                 <MenuItem
