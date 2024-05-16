@@ -10,7 +10,7 @@ export default function EventCard({event}) {
             <p>{event.event_description}</p>
             <p>Goal: ${event.goal_amount}</p>
             <p>Current: ${event.current_money}</p>
-            <p>End Date: {event.end_date}</p>
+            <p>End Date: {event.end_date.toISOString().substring(0, 10)}</p>
             <button onClick={() => setIsExpanded(!isExpanded)}>Learn More</button>
             {/*conditional render this*/}
             {isExpanded && (

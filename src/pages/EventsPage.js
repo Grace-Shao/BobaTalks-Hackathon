@@ -9,8 +9,19 @@ export default function EventsPage() {
   useEffect(() => {
     axios.get('http://localhost:5000/events')
       .then(response => {
-        console.log("response", response.data);
-        setEvents(response.data);
+        let events = []
+
+        for (let event of response.data) {
+          let newEvent = {
+            ...event,
+            end_date: new Date(event.end_date),
+            start_date: new Date(event.start_date)
+          }
+
+          events.push(newEvent)
+        }
+
+        setEvents(events);
       })
       .catch(error => {
         console.log(error);
@@ -32,7 +43,7 @@ export default function EventsPage() {
         <h1>Events</h1>
         {
           events && events.length > 0 ? events.map((event, index) => 
-            <EventCard event={event} />
+            <EventCard event={event} key={index} />
           ) : <h3>No events found</h3>
         }
       </Container>
