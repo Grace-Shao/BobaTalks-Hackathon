@@ -1,5 +1,7 @@
 import express from "express";
 import { ObjectId } from "mongodb";
+import Event from '../models/Event.mjs';
+
 const router = express.Router();
 import db from "../db/conn.mjs";
 
@@ -7,25 +9,27 @@ import db from "../db/conn.mjs";
  * Fetches all events that the user should be able to see
  */
 router.get("/", async (req, res) => {
-  let collection = await db.collection("events");
-
-  // Get today's date
-  let today = new Date();
-  // Reset hours, minutes, seconds and milliseconds to make it start of the day
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  let results = await collection
-    .find({
-      // Check current money is less than target money
-      $expr: { $lt: ["$current_money", "$target_money"] },
-      // Check if deadline is after today
-      deadline: {
-        $gt: today.toISOString(), // Use ISO string for date comparison
-      },
-    })
-    .toArray();
-
-  res.status(200).send(results);
+  try {
+    const results = await Event.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $lt: ["$current_money", "$goal_amount"] },
+              { $gte: ["$end_date", today] }
+            ]
+          }
+        }
+      }
+    ]);
+    res.status(200).send(results);
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    res.status(500).send("Error fetching events");
+  }
 });
 
 /**
@@ -33,31 +37,37 @@ router.get("/", async (req, res) => {
  */
 router.get("/:id", async (req, res) => {
   const { username } = req.body;
-  let collection = await db.collection("events");
-  let query = { _id: ObjectId.createFromHexString(req.params.id) };
-  let result = await collection.findOne(query);
+  try {
+    const result = await Event.findById(req.params.id); // Mongoose simplifies finding by ID
 
-  if (!result) res.send("Not found").status(404);
-  else {
+    if (!result) {
+      return res.status(404).send("Not found");
+    }
+
     let today = new Date();
+    today.setHours(0, 0, 0, 0);
     let endDate = new Date(result.end_date);
-
     let owner = result.event_owner;
 
     if (owner !== username) {
       if (endDate < today) {
-        res.send("The event has passed!").status(404);
+        return res.status(404).send("The event has passed!");
       } else {
         let currAmt = result.current_money;
         let targetAmt = result.goal_amount;
 
         if (currAmt >= targetAmt) {
-          res.send("The target amount has been reached!").status(404);
+          return res.status(404).send("The target amount has been reached!");
         } else {
-          res.send(result).status(200);
+          return res.status(200).send(result);
         }
       }
-    } else res.send(result).status(200);
+    } else {
+      return res.status(200).send(result);
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Route encountered an error.");
   }
 });
 
@@ -65,117 +75,70 @@ router.get("/:id", async (req, res) => {
  * Adds a new document to the collection
  */
 router.post("/", async (req, res) => {
-  const { current_money, target_money, event_name, event_owner, deadline } =
-    req.body;
+  const {
+    goal_amount, event_name, event_owner, end_date,
+    event_description, start_date
+  } = req.body;
 
-  // Validate current_money is non-negative
-  if (
-    current_money === undefined ||
-    typeof current_money !== "number" ||
-    current_money < 0
-  ) {
-    return res
-      .status(400)
-      .send({ error: "current_money must be a non-negative number" });
-  }
-
-  // Validate target_money is greater than 0
-  if (
-    target_money === undefined ||
-    typeof target_money !== "number" ||
-    target_money <= 0
-  ) {
-    return res
-      .status(400)
-      .send({ error: "target_money must be greater than 0" });
-  }
-
-  // Validate event_owner
-  if (typeof event_owner !== "string" || event_owner.trim() === "") {
-    return res
-      .status(400)
-      .send({ error: "event_owner must be a non-empty string" });
-  }
-
-  // Validate deadline as a date
-  if (isNaN(Date.parse(deadline))) {
-    return res.status(400).send({ error: "deadline must be a valid datetime" });
-  }
-
-  let newDocument = {
-    current_money,
-    target_money,
+  // Create a new event instance using Mongoose
+  const newEvent = new Event({
+    current_money: 0,
+    goal_amount,
     event_name,
     event_owner,
-    deadline: new Date(deadline),
-  };
+    event_description,
+    end_date: new Date(end_date),
+    start_date: new Date(start_date),
+    thank_you_note: []
+  });
 
-  let collection = await db.collection("events");
-  let result = await collection.insertOne(newDocument);
-
-  res.status(201).send(result);
+  try {
+    // Save the new event to the database
+    const result = await newEvent.save();
+    res.status(201).send(result);
+  } catch (error) {
+    // If Mongoose throws a validation error, catch it and return a 400 bad request
+    if (error.name === 'ValidationError') {
+      return res.status(400).send({ error: error.message });
+    } else {
+      // For other types of errors, return a 500 internal server error
+      return res.status(500).send({ error: 'Internal server error' });
+    }
+  }
 });
 
 /**
  * Edit an existing event
  */
 router.put("/:id", async (req, res) => {
-  const collection = db.collection("events");
   const eventId = req.params.id;
-  const { current_money, target_money, event_owner, deadline } = req.body;
+  const { current_money, new_notes } = req.body;
 
-  const originalEvent = await collection.findOne({ _id: ObjectId(eventId) });
-  if (!originalEvent) {
-    return res.status(404).send({ error: "Event to edit not found" });
+  try {
+    const originalEvent = await Event.findById(eventId);
+    if (!originalEvent) {
+      return res.status(404).send({ error: "Event to edit not found" });
+    }
+
+    // Update fields (only if they are provided and valid)
+    if (current_money !== undefined) originalEvent.current_money = current_money;
+
+    // Add new notes to event
+    for (let note of new_notes) {
+      originalEvent.thank_you_note.push(note);
+    }
+
+    // Save the updates
+    const result = await originalEvent.save();
+    res.status(200).send({ message: "Event updated successfully", data: result });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      res.status(400).send({ error: err.message });
+    } else {
+      console.error("Error updating event:", err);
+      res.status(500).send({ error: "Update failed due to internal server error." });
+    }
   }
-
-  // Validate event_owner
-  if (typeof event_owner !== "string" || event_owner.trim() === "") {
-    return res
-      .status(400)
-      .send({ error: "event_owner must be a non-empty string" });
-  }
-
-  if (event_owner !== originalEvent.event_owner) {
-    return res.status(400).send({ error: "Cannot change the event owner" });
-  }
-
-  // Validate current_money is non-negative
-  if (
-    current_money === undefined ||
-    typeof current_money !== "number" ||
-    current_money < 0
-  ) {
-    return res
-      .status(400)
-      .send({ error: "current_money must be a non-negative number" });
-  }
-
-  // Validate target_money is greater than 0
-  if (
-    target_money === undefined ||
-    typeof target_money !== "number" ||
-    target_money <= 0
-  ) {
-    return res
-      .status(400)
-      .send({ error: "target_money must be greater than 0" });
-  }
-
-  // Validate deadline as a date
-  if (isNaN(Date.parse(deadline))) {
-    return res.status(400).send({ error: "deadline must be a valid datetime" });
-  }
-
-  // Perform the update if all validations pass
-  const update = { $set: req.body };
-  const result = await collection.updateOne({ _id: ObjectId(eventId) }, update);
-
-  if (result.modifiedCount === 0) {
-    return res.status(500).send({ error: "Update failed" });
-  }
-
-  res.status(200).send({ message: "Event updated successfully" });
 });
 
 /**
@@ -183,25 +146,16 @@ router.put("/:id", async (req, res) => {
  */
 router.delete("/:id", async (req, res) => {
   try {
-    const query = { _id: ObjectId.createFromHexString(req.params.id) };
-    const collection = db.collection("events");
+    // Find the document by ID and delete it in one operation
+    const result = await Event.findByIdAndDelete(req.params.id);
 
-    // First check if the event actually exists. If it does, delete it
-    const event = await collection.findOne(query);
-    if (!event) {
-      // If no event is found, return a 404 not found error
+    // Check if an event was actually found and deleted
+    if (!result) {
       return res.status(404).send({ message: "Event not found." });
     }
-    let result = await collection.deleteOne(query);
 
-    // Check if the delete operation was successful
-    if (result.deletedCount === 0) {
-      // If no records were deleted
-      return res.status(404).send({ message: "No event found to delete." });
-    }
     res.status(200).send({ message: "Event deleted successfully." });
   } catch (error) {
-    // General error handling
     console.error("Failed to delete event:", error);
     res.status(500).send({
       message: "Failed to delete event due to internal server error.",

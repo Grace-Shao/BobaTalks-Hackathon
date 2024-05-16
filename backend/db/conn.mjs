@@ -1,12 +1,10 @@
-import { MongoClient } from "mongodb"
-const connectionString = process.env.MONGODB_URI || ""
+import mongoose from 'mongoose';
+const connectionString = process.env.MONGODB_URI;
 
-const client = new MongoClient(connectionString)
-let conn
-try {
-  conn = await client.connect()
-} catch(e) {
-  console.error(e)
-}
-let db = conn.db("boba_server")
-export default db
+mongoose.connect(connectionString, {
+  dbName: 'boba_server',
+})
+  .then(() => console.log('MongoDB connected using Mongoose'))
+  .catch(err => console.error(err));
+
+export default mongoose;

@@ -6,8 +6,6 @@ import "express-async-errors";
 import indexRouter from './routes/index.mjs'
 import eventsRouter from './routes/events.mjs'
 
-console.log(process.env)
-
 const app = express()
 app.use(cors());
 // allow express to parse json bodies in requests
@@ -24,6 +22,5 @@ app.use((err, _req, res, next) => {
 })
 
 app.listen(port, () => {
-  // perform a database connection when server starts
   console.log(`Server is running on port: ${port}`)
 })
