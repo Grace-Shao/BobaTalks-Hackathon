@@ -37,6 +37,11 @@ router.get("/", async (req, res) => {
  */
 router.get("/:id", async (req, res) => {
   const { username } = req.body;
+
+  if (!username) {
+    return res.status(404).send("Please input a username.");
+  }
+
   try {
     const result = await Event.findById(req.params.id); // Mongoose simplifies finding by ID
 
