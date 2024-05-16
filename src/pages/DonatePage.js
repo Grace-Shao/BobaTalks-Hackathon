@@ -12,7 +12,6 @@ export default function DonatePage() {
     // const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: ''})
     // const numberFields = ['goal_amount']; // add any other number fields here
     
-
     const handleDonation = (amount) => {
         setDonationAmount(amount);
     }
@@ -55,7 +54,7 @@ export default function DonatePage() {
                     pb: { xs: 8, sm: 12 },
                 }}
             >
-                <h1>Donate</h1>
+                <h1>Give the gift of Boba!</h1>
                 <form onSubmit={submitDonation}>
                     <label htmlFor="sender_name">Your Name (optional):</label>
                     <input type="text" id="sender_name" name="sender_name" onChange={handleChange} />
