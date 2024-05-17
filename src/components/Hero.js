@@ -22,6 +22,7 @@ export default function Hero() {
           pb: { xs: 12, sm: 12 },
           px: 0,
           backgroundColor: '#D3E9FF',
+          height: '100vh',
           // width:'100%',
           // height:'100%'
         }}

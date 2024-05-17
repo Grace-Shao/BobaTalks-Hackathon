@@ -37,6 +37,7 @@ export default function SignUpForm() {
           alignItems: 'center',
           pt: { xs: 14, sm: 20 },
           pb: { xs: 8, sm: 12 },
+          height: '100vh',
         }}
       >
         <Card sx={{ minWidth: 275 }}>

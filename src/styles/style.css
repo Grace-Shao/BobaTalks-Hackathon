@@ -37,3 +37,14 @@ button[type="submit"]:hover {
     border-radius: 50%;
     display: inline-block;
   }
+
+.column {
+    float: left;
+    width: 50%;
+  }
+
+.row {
+content: "";
+display: table;
+clear: both;
+}

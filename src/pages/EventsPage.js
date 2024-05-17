@@ -64,7 +64,7 @@ export default function EventsPage() {
           pb: { xs: 12, sm: 12 },
           px: 0,
           backgroundColor: '#D3E9FF',
-          height: '1000px'
+          minHeight: '100vh',
         }}
       >
         <Navbar />
