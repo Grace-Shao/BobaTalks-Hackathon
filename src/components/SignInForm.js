@@ -46,14 +46,10 @@ export default function SignInForm() {
           Enter account details
         </Typography>
         <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 500}} 
-        id="outlined-basic" label="Full Name" variant="outlined" />
-        <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 500}} 
         id="outlined-basic" label="Email Address" variant="outlined" />
         <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 500}} 
         id="outlined-basic" label="Password" variant="outlined" />
-        <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 500}} 
-        id="outlined-basic" label="Confirm Password" variant="outlined" />
-        <Button sx={{mt: 1}} color="custom" variant="outlined" href="/SignIn"> Register </Button>
+        <Button sx={{mt: 1}} color="custom" variant="outlined" href="/SignIn"> Login </Button>
 
       </Container>
       </ThemeProvider>

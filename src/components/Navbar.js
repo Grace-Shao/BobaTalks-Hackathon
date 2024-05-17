@@ -12,6 +12,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../styles/style.css';
+import { useAuth } from '../context/AuthContext';
+
 
 const theme = createTheme({
   palette: {
@@ -25,6 +27,8 @@ const theme = createTheme({
 });
 
 function Navbar() {
+  const { user } = useAuth();
+  console.log(user)
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -91,44 +95,47 @@ function Navbar() {
               }}
             >
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <MenuItem
-                component={Link}
-                to="/"
-              >
-                <Typography variant="body2" color="text.primary">
-                <h3 style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>BobaShare</h3>
-                </Typography>
-              </MenuItem>
                 <MenuItem
                   component={Link}
-                  to="/EventsPage"
-                  sx={{ py: '6px', px: '12px' }}
+                  to="/"
                 >
-                  {/* <Typography style={{color:'white'}} variant="body2" color="text.primary">
-                    All Events
-                  </Typography> */}
-                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>All Events</h4>
+                  <p style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>BobaShare</p>
                 </MenuItem>
-                <MenuItem
-                  component={Link}
-                  to="/CreateEventPage"
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Create Event</h4>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('testimonials')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Manage Event</h4>
-                </MenuItem>
-                <MenuItem
-                  component={Link}
-                  to="/BobaVendorsPage"
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>See Boba Vendors</h4>
-                </MenuItem>
+                {user && (
+                  <>
+                    <MenuItem
+                      component={Link}
+                      to="/EventsPage"
+                      sx={{ py: '6px', px: '12px' }}
+                    >
+                      {/* <Typography style={{color:'white'}} variant="body2" color="text.primary">
+                        All Events
+                      </Typography> */}
+                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>All Events</h4>
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to="/CreateEventPage"
+                      sx={{ py: '6px', px: '12px' }}
+                    >
+                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Create Event</h4>
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => scrollToSection('testimonials')}
+                      sx={{ py: '6px', px: '12px' }}
+                    >
+                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Manage Event</h4>
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to="/BobaVendorsPage"
+                      sx={{ py: '6px', px: '12px' }}
+                    >
+                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>See Boba Vendors</h4>
+                    </MenuItem>
+                  </>
+                  )
+                }
               </Box>
             </Box>
             <Box
