@@ -96,7 +96,7 @@ function Navbar() {
                 to="/"
               >
                 <Typography variant="body2" color="text.primary">
-                <h3 style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>Boba Talks</h3>
+                <h3 style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>BobaShare</h3>
                 </Typography>
               </MenuItem>
                 <MenuItem
@@ -114,15 +114,20 @@ function Navbar() {
                   to="/CreateEventPage"
                   sx={{ py: '6px', px: '12px' }}
                 >
-
                   <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Create Event</h4>
                 </MenuItem>
                 <MenuItem
                   onClick={() => scrollToSection('testimonials')}
                   sx={{ py: '6px', px: '12px' }}
                 >
-
                   <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Manage Event</h4>
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/BobaVendorsPage"
+                  sx={{ py: '6px', px: '12px' }}
+                >
+                  <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>See Boba Vendors</h4>
                 </MenuItem>
               </Box>
             </Box>

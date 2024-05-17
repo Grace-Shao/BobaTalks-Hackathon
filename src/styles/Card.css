@@ -1,45 +1,37 @@
 .card {
+    outline: 2px solid white;
+    width: 80%;
+    border-radius: 10px;
+    padding: 10px; 
     margin: 15px; 
-    background: orange;
-
-    display: flex; 
-    padding: 0 1.5rem; 
-    justify-content: space-between; 
-    align-items: flex-start; 
-    border-radius: 0.5rem; 
-    width: 75%; 
-    max-width: 32rem; 
-    color: #ffffff; 
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
-
+    background-color: #EDAB6F;
+    color: white;
 }
-
-.card_right-div {
-    text-align: right; 
+.smallCard {
+  outline: 2px solid white;
+  width: 60%;
+  border-radius: 10px;
+  padding: 10px; 
+  margin: 15px; 
+  background-color: #EDAB6F;
+  color: white;
 }
-
-.card_event-name {
-    font-size: 1.25rem;
-    line-height: 1.75rem; 
-    font-weight: 700; 
-    margin-bottom: 0;
+.column {
+    float: left;
+    width: 50%;
+  }
+/* 
+.card p:nth-child(4){
+    float: right;
+    color: red;
 }
-
-.card_organization {
-    margin-top: 0.5rem; 
-    font-style: italic; 
-}
-
-.card_goal {
-    margin-top: 2rem; 
-}
-
-.card_learn-more {
-    display: block; 
-    margin-top: 4.5rem; 
-    color: #ffffff; 
-    text-decoration: underline; 
-    border: none;
-    background: none;
-    font-style: italic;
+.card p:nth-child(2){
+    width: 50%;
+    float: left;
+  } */
+/* Clear floats after the columns */
+.row:after {
+content: "";
+display: table;
+clear: both;
 }

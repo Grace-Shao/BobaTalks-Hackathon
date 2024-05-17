@@ -8,6 +8,10 @@ import { Link } from 'react-router-dom'
 import '../styles/Card.css'
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import VendorCard from '../components/VendorCard';
+import bobaTalksLogo from '../imgs/bubbleTeaLogo.png';
+import jeffLogo from '../imgs/jeff.png';
+import kungFuTeaLogo from '../imgs/kungFuTeaLogo.png';
 
 const theme = createTheme({
   palette: {
@@ -20,41 +24,16 @@ const theme = createTheme({
   },
 });
 
-export default function EventsPage() {
-  const [events, setEvents] = useState([]); 
-  useEffect(() => {
-    axios.get('http://localhost:5000/events')
-      .then(response => {
-        let events = []
-
-        for (let event of response.data) {
-          let newEvent = {
-            ...event,
-            end_date: new Date(event.end_date),
-            start_date: new Date(event.start_date)
-          }
-
-          events.push(newEvent)
-        }
-
-        setEvents(events);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }, []);
+export default function BobaVendorsPage() {
+    const vendors = [
+        { vendor_name: 'Jeffs Boba for the Nguyen', location: 'Address 2', specialty: 'Homemade mom and pop shop', imageUrl: jeffLogo },
+        { vendor_name: 'Kung Fu Tea', location: 'Address 3', specialty: 'Variety of flavors to choose from', imageUrl: kungFuTeaLogo },
+        { vendor_name: 'Boba Talks ', location: 'Address 1', specialty: 'Popular among students', imageUrl: bobaTalksLogo },
+        // Add more vendors as needed
+    ];
     
     return (
     <ThemeProvider theme={theme}>
-          {/* <AppBar
-            position="fixed"
-            sx={{
-              boxShadow: 0,
-              bgcolor: 'transparent',
-              backgroundImage: 'none',
-              mt: 2,
-            }}
-          ></AppBar> */}
       <Container
         className = "width-no-space"
         sx={{
@@ -69,12 +48,12 @@ export default function EventsPage() {
       >
         <Navbar />
         <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
-        Upcoming Events
+        Local Boba Vendors Nearby
         </Typography>
         {
-          events && events.length > 0 ? events.map((event, index) => 
-            <EventCard event={event} key={index} />
-          ) : <h3>No events found</h3>
+          vendors && vendors.length > 0 ? vendors.map((vendor, index) => (
+            <VendorCard event={vendor} key={index}/>
+            )) : (<p>No vendors found</p>)
         }
       </Container>
       </ThemeProvider>
