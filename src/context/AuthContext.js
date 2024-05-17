@@ -18,9 +18,18 @@ export const AuthProvider = ({ children }) => {
   }
 
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));  // Save to local storage or cookie
+  const login = async (credentials) => {
+    try {
+      const response = await axios.post('http://localhost:5000/users/login', credentials);
+      
+      if (response.status === 200) {
+        let userData = { email: credentials.email }
+        setUser(userData)
+        localStorage.setItem('user', JSON.stringify(userData));  // Save to local storage, can probably replace with cookie
+      }
+    } catch (error) {
+      console.error('Login error:', error.response ? error.response.data : error.message);
+    }
   };
 
   const logout = () => {
