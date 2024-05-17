@@ -1,5 +1,5 @@
 import express from "express";
-import Event from '../models/Event.mjs';
+import Event from "../models/Event.mjs";
 
 const router = express.Router();
 
@@ -17,16 +17,32 @@ router.get("/", async (req, res) => {
           $expr: {
             $and: [
               { $lt: ["$current_money", "$goal_amount"] },
-              { $gte: ["$end_date", today] }
-            ]
-          }
-        }
-      }
+              { $gte: ["$end_date", today] },
+            ],
+          },
+        },
+      },
     ]);
     res.status(200).send(results);
   } catch (err) {
     console.error("Error fetching events:", err);
     res.status(500).send("Error fetching events");
+  }
+});
+
+/**
+ * Fetches all events that the user has created
+ */
+router.get("/user/:username", async (req, res) => {
+  try {
+    const results = await Event.find({ event_owner: req.params.username });
+
+    if (!results) return res.status(404).send("No events found.");
+
+    res.status(200).send(results);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Route encountered an error.");
   }
 });
 
@@ -79,8 +95,12 @@ router.get("/:id", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   const {
-    goal_amount, event_name, event_owner, end_date,
-    event_description, start_date
+    goal_amount,
+    event_name,
+    event_owner,
+    end_date,
+    event_description,
+    start_date,
   } = req.body;
 
   // Create a new event instance using Mongoose
@@ -92,7 +112,7 @@ router.post("/", async (req, res) => {
     event_description,
     end_date: new Date(end_date),
     start_date: new Date(start_date),
-    thank_you_note: []
+    thank_you_note: [],
   });
 
   try {
@@ -101,11 +121,11 @@ router.post("/", async (req, res) => {
     res.status(201).send(result);
   } catch (error) {
     // If Mongoose throws a validation error, catch it and return a 400 bad request
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       return res.status(400).send({ error: error.message });
     } else {
       // For other types of errors, return a 500 internal server error
-      return res.status(500).send({ error: 'Internal server error' });
+      return res.status(500).send({ error: "Internal server error" });
     }
   }
 });
@@ -124,7 +144,8 @@ router.put("/:id", async (req, res) => {
     }
 
     // Update fields (only if they are provided and valid)
-    if (current_money !== undefined) originalEvent.current_money = current_money;
+    if (current_money !== undefined)
+      originalEvent.current_money = current_money;
 
     // Add new notes to event
     for (let note of new_notes) {
@@ -133,13 +154,17 @@ router.put("/:id", async (req, res) => {
 
     // Save the updates
     const result = await originalEvent.save();
-    res.status(200).send({ message: "Event updated successfully", data: result });
+    res
+      .status(200)
+      .send({ message: "Event updated successfully", data: result });
   } catch (err) {
-    if (err.name === 'ValidationError') {
+    if (err.name === "ValidationError") {
       res.status(400).send({ error: err.message });
     } else {
       console.error("Error updating event:", err);
-      res.status(500).send({ error: "Update failed due to internal server error." });
+      res
+        .status(500)
+        .send({ error: "Update failed due to internal server error." });
     }
   }
 });
