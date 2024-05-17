@@ -3,6 +3,22 @@ import EventCard from "../components/EventCard";
 import Navbar from "../components/Navbar";
 import axios from 'axios';
 import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom'
+import '../styles/Card.css'
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    custom: {
+      main: '#FFFFFF',
+      light: '#FFFFFF',
+      dark: '#FFFFFF',
+      contrastText: '#FFFFFF',
+    },
+  },
+});
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]); 
@@ -29,23 +45,38 @@ export default function EventsPage() {
     }, []);
     
     return (
-
+    <ThemeProvider theme={theme}>
+          {/* <AppBar
+            position="fixed"
+            sx={{
+              boxShadow: 0,
+              bgcolor: 'transparent',
+              backgroundImage: 'none',
+              mt: 2,
+            }}
+          ></AppBar> */}
       <Container
+        className = "width-no-space"
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          pt: { xs: 14, sm: 20 },
-          pb: { xs: 8, sm: 12 },
+          pt: { xs: 12, sm: 12 },
+          pb: { xs: 12, sm: 12 },
+          px: 0,
+          backgroundColor: '#D3E9FF',
+          height: '1000px'
         }}
       >
         <Navbar />
-        <h1>Events</h1>
+        <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
+        Upcoming Events
+        </Typography>
         {
           events && events.length > 0 ? events.map((event, index) => 
             <EventCard event={event} key={index} />
           ) : <h3>No events found</h3>
         }
       </Container>
+      </ThemeProvider>
     );
   }
