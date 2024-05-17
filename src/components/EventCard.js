@@ -2,21 +2,36 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 import '../styles/Card.css'
 import Button from '@mui/material/Button';
+import LinearProgress from '@mui/material/LinearProgress';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function EventCard({event}) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const progress = (event.current_money / event.goal_amount) * 100;
+
     return (
         <div className='card'>
         <div className="column">
             <h1>{event.event_name}</h1>
             <p><i>Organized by: {event.event_owner}</i></p>
-            <p>{event.event_description}</p>
-            <p>Goal: ${event.goal_amount}</p>
-            <p>Current: ${event.current_money}</p>
+            {/* <b><p>Goal: ${event.goal_amount}</p>
+            <p>Current: ${event.current_money}</p></b> */}
+            <Tooltip title={`Current Money: ${event.current_money}, Goal: ${event.goal_amount}`}>
+                <LinearProgress variant="determinate" value={progress}
+                sx={{ 
+                height: '20px', 
+                borderRadius: '20px',
+                backgroundColor: 'white', 
+                '& .MuiLinearProgress-bar': { 
+                borderRadius: '20px', 
+                backgroundColor: 'green.500', 
+                } 
+            }}  />
+            </Tooltip>
+            
         </div>
         <div className="column">
-            <p>End Date: {event.end_date.toISOString().substring(0, 10)}</p>
-            <p>Goal: ${event.target_money}</p>
+            <p>Ending on {event.end_date.toISOString().substring(0, 10)}</p>
         </div>
             <Button color="custom"
               variant="outlined"
