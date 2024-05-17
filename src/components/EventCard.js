@@ -33,10 +33,8 @@ export default function EventCard({event}) {
                         >Donate
                         </Button>
                     </Link>
-                )}
-            </div>
-                                    
-            
+                </>
+            )}
         </div>
     );
 }
