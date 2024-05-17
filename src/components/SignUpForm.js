@@ -16,7 +16,7 @@ export default function SignUpForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -25,7 +25,7 @@ export default function SignUpForm() {
       alert("Passwords do not match");
       return;
     }
-    login({ email, password });
+    signup({ email, password });
     navigate('/');
   };
 

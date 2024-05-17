@@ -1,9 +1,7 @@
 import express from "express";
-import { ObjectId } from "mongodb";
 import Event from '../models/Event.mjs';
 
 const router = express.Router();
-import db from "../db/conn.mjs";
 
 /**
  * Fetches all events that the user should be able to see
