@@ -60,13 +60,13 @@ export default function CreateEventPage() {
                     pb: { xs: 12, sm: 12 },
                     px: 0,
                     backgroundColor: '#D3E9FF',
-                    height: '1000px',
+                    height: '100vh',
                 }}
             >
             <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
         Event Details
         </Typography>
-            {/* <form onSubmit={createEvent}> */}
+        <form onSubmit={createEvent}>
             <Grid container spacing={8}>
         <Grid item>
         <TextField sx={{marginLeft: 10, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}} 
@@ -78,7 +78,7 @@ export default function CreateEventPage() {
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}} 
-                id="start_date" name="start_date" onChange={handleChange} label="Start Date (MM/DD/YYYY)" variant="outlined" />
+                id="start_date" name="start_date" onChange={handleChange} label="Start Date (YYYY-MM-DD)" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}} 
@@ -86,7 +86,7 @@ export default function CreateEventPage() {
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}} 
-                id="end_date" name="end_date" onChange={handleChange} label="End Date (MM/DD/YYYY)" variant="outlined" />
+                id="end_date" name="end_date" onChange={handleChange} label="End Date (YYYY-MM-DD)" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}} 
@@ -97,16 +97,18 @@ export default function CreateEventPage() {
                 id="goal_amount" name="goal_amount" onChange={handleChange} label="Goal Amount" variant="outlined" />
         </Grid>
         <Grid item>
+       
         <FormGroup>
-  <FormControlLabel sx={{mt: -5}}control={<Checkbox />} label="Display Amount Raised" />
-</FormGroup>
+        <FormControlLabel sx={{mt: -5}}control={<Checkbox />} label="Display Amount Raised" />
+        </FormGroup>
         </Grid>
         </Grid>
-        <Button style={{
+        <Button type="onSubmit" style={{
         backgroundColor: "#EDAB6F",
         width: '100px',
         marginLeft: '49%'
     }} variant="contained" onSubmit={createEvent}>Create</Button>
+     </form>
 
     
             </Container>

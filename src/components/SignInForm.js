@@ -52,6 +52,7 @@ export default function SignInForm() {
           maxWidth: 0,
           width: '100%',
           bgcolor: '#EDAB6F',
+          height: '100vh',
         }}
       >
         <span className="circle"></span>
