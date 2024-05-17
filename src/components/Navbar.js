@@ -138,28 +138,32 @@ function Navbar() {
                 }
               </Box>
             </Box>
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 0.5,
-                alignItems: 'center',
-              }}
-            >
-              <Button
-                color="custom"
-                variant="outlined" 
-                href="/SignIn"
-              >
-                Sign in
-              </Button>
-              <Button
-                color="custom"
-                variant="outlined"
-                href="/SignUp"
-              >
-                Sign up
-              </Button>
-            </Box>
+            {!user && (
+              <>
+                <Box
+                sx={{
+                  display: { xs: 'none', md: 'flex' },
+                  gap: 0.5,
+                  alignItems: 'center',
+                }}
+                >
+                  <Button
+                    color="custom"
+                    variant="outlined" 
+                    href="/SignIn"
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    color="custom"
+                    variant="outlined"
+                    href="/SignUp"
+                  >
+                    Sign up
+                  </Button>
+                </Box>
+              </>
+            )}
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
                 variant="text"
