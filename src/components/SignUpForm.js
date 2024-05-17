@@ -1,6 +1,6 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import * as React from 'react';
+import React, { useState } from 'react';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,8 +9,26 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUpForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    login({ email, password });
+    navigate('/');
+  };
+
   return (
       <Container
         sx={{
@@ -29,14 +47,19 @@ export default function SignUpForm() {
         <Typography sx={{padding: 2}} variant="h4" component="div">
           Sign Up
         </Typography>
-        <form>
+        <form onSubmit={handleSubmit}>
                 <label sx={{padding: 2}}>Email</label>
-                <input type="text" id="email" name="email" />
+                <input type="text" id="email" name="email"
+                value={email} onChange={(e) => setEmail(e.target.value)} />
 
                 <label sx={{padding: 2}}>Password</label>
-                <input sx={{paddingTop: 2}} type="text" id="pw" name="pw" />
+                <input sx={{paddingTop: 2}} type="text" id="pw" name="pw" 
+                value={password} onChange={(e) => setPassword(e.target.value)}
+                />
                 <label sx={{padding: 2}}>Re-enter Password</label>
-                <input sx={{paddingTop: 2}} type="text" id="pw" name="pw" />
+                <input sx={{paddingTop: 2}} type="text" id="pw" name="pw" 
+                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                />
                 <Button
                 color="primary"
                 variant="contained"
@@ -44,6 +67,7 @@ export default function SignUpForm() {
                 component="a"
                 type="submit"
                 sx={{padding: 2}}
+                onClick={handleSubmit}
               >
                 Sign up
               </Button>
