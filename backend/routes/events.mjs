@@ -136,7 +136,6 @@ router.post("/", async (req, res) => {
  * Edit an existing event
  */
 router.put("/:id", async (req, res) => {
-  console.log("start")
   const eventId = req.params.id;
   const updatableFields = [
     'goal_amount', 'event_name', 'event_owner', 'event_description', 
@@ -151,13 +150,10 @@ router.put("/:id", async (req, res) => {
 
     // Loop through each item specified in updates, update event with their valuess
     updatableFields.forEach(key => {
-      console.log(req.body[key])
       if (req.body[key] !== undefined) {
         event[key] = req.body[key];
       }
     });
-
-    console.log(event)
     
     // Validate the updated document before saving
     await event.validate();
@@ -181,7 +177,7 @@ router.put("/:id", async (req, res) => {
  */
 router.put("/donate/:id", async (req, res) => {
   const eventId = req.params.id;
-  const { donated, note } = req.body;
+  const { donation_amount, thank_you_note } = req.body;
 
   try {
     const originalEvent = await Event.findById(eventId);
@@ -190,12 +186,12 @@ router.put("/donate/:id", async (req, res) => {
     }
 
     // Update fields (only if they are provided and valid)
-    if (donated !== undefined)
-      originalEvent.current_money += donated;
+    if (donation_amount !== undefined)
+      originalEvent.current_money += donation_amount;
 
     // Add new notes to event
-    if (note) {
-      originalEvent.thank_you_note.push(note);
+    if (thank_you_note) {
+      originalEvent.thank_you_note.push(thank_you_note);
     }
 
     // Save the updates
