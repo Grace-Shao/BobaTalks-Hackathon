@@ -27,7 +27,7 @@ export default function ManageEventPage() {
   const [events, setEvents] = useState([]);
 
   const getEvents = () => {
-    axios.get('http://localhost:5000/events/user/' + user.email)
+    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events/user/${user.email}`)
     .then(response => {
       let events = []
 
@@ -55,7 +55,7 @@ export default function ManageEventPage() {
     const deleteEvent = async (event_id) => {
       if (window.confirm('Are you sure you want to delete this event?')) {
           try {
-              const response = await axios.delete(`http://localhost:5000/events/${event_id}`);
+              const response = await axios.delete(`${process.env.REACT_APP_API_ENDPOINT}/events/${event_id}`);
               alert('Event deleted successfully');
               let newEvents = events.filter(event => event._id !== event_id);
               setEvents(newEvents);

@@ -39,7 +39,7 @@ export default function EditEventPage() {
       if (!eventId || !user || !user.email) return;
 
       console.log(eventId, user.email)
-        axios.get(`http://localhost:5000/events/${eventId}`, {
+        axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events/${eventId}`, {
           params: { username: user.email }
         })
         .then(response => {
@@ -72,7 +72,7 @@ export default function EditEventPage() {
 
     const editEvent = async (event) => {
         event.preventDefault();
-        axios.put(`http://localhost:5000/events/${eventId}`, post)
+        axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/${eventId}`, post)
             .then(response => {
               console.log('Event updated:', response.data);
               alert('Event successfully updated!');

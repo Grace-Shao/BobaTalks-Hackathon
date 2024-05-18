@@ -47,7 +47,7 @@ export default function DonatePage() {
         };
     
         try {
-            await axios.put(`http://localhost:5000/events/donate/${id}`, data);
+            await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
             console.log('Donation submitted');
         } catch (error) {
             console.error(error);
