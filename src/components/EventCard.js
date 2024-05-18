@@ -5,9 +5,13 @@ import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import Tooltip from '@mui/material/Tooltip';
 
-export default function EventCard({event}) {
+export default function EventCard({event, manageEventView}) {
     const [isExpanded, setIsExpanded] = useState(false);
     const progress = (event.current_money / event.goal_amount) * 100;
+
+    const deleteEvent = () => {
+
+    }
 
     return (
         <div className='card'>
@@ -38,20 +42,40 @@ export default function EventCard({event}) {
                 style={{ objectFit: 'cover', borderRadius: '10px'}}
             />
             ) : null} 
-            <Button color="custom"
-              variant="outlined"
-              onClick={() => setIsExpanded(!isExpanded)}>
-            Learn More</Button>
-            {isExpanded && (
+            {!manageEventView && (
                 <>
-                    <p>{event.event_description}</p>
-                    <Link to={`DonatePage/${event._id}`}>
-                        <Button 
-                            color="custom"
-                            variant="outlined"
-                        >Donate
+                    <Button color="custom"
+                    variant="outlined"
+                    onClick={() => setIsExpanded(!isExpanded)}>
+                        Learn More
+                    </Button>
+                    {isExpanded && (
+                        <>
+                            <p>{event.event_description}</p>
+                            <Link to={`DonatePage/${event._id}`}>
+                                <Button 
+                                    color="custom"
+                                    variant="outlined"
+                                >Donate
+                                </Button>
+                            </Link>
+                        </>
+                    )}
+                </>
+            )}
+            {manageEventView && (
+                <>
+                    <Link to={`EditEvent/${event._id}`}>
+                        <Button color="custom"
+                        variant="outlined">
+                            Edit Event
                         </Button>
                     </Link>
+                    <Button color="custom"
+                    variant="outlined"
+                    onClick={() => deleteEvent()}>
+                        Delete Event
+                    </Button>
                 </>
             )}
         </div>
