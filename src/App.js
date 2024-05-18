@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import EditEventPage from "./pages/EditEventsPage";
 
 function App() {
   return (
@@ -54,6 +55,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ManageEventPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ManageEventPage/EditEvent/:id"
+            element={
+              <ProtectedRoute>
+                <EditEventPage />
               </ProtectedRoute>
             }
           />
