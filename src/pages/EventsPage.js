@@ -66,7 +66,7 @@ export default function EventsPage() {
             <EventCard key={index} event={event} />
           ) : <h3>No events found</h3>
         }
-         {/* <div className="card">
+         <div className="card">
           <div className="column">
             <h2>Name</h2>
             <p><i>Organized by: </i></p>
@@ -77,16 +77,16 @@ export default function EventsPage() {
             <p>Deadline:</p>
             <p>Goal:</p>
             </div>
-            <Link to={`Event/:id`}>
+            <Link to={`/DonatePage`}>
             <Button
                 color="custom"
                 variant="outlined"
               >
-                Learn More
+                Donate
               </Button>
             </Link>
             
-        </div> */}
+        </div>
       </Container>
       </ThemeProvider>
     );
