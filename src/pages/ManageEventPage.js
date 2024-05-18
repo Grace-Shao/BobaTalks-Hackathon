@@ -68,15 +68,6 @@ export default function ManageEventPage() {
 
     return (
     <ThemeProvider theme={theme}>
-          {/* <AppBar
-            position="fixed"
-            sx={{
-              boxShadow: 0,
-              bgcolor: 'transparent',
-              backgroundImage: 'none',
-              mt: 2,
-            }}
-          ></AppBar> */}
       <Container
         className = "width-no-space"
         sx={{
@@ -96,7 +87,7 @@ export default function ManageEventPage() {
         {
           events && events.length > 0 ? events.map((event, index) =>
             <EventCard event={event} key={index} manageEventView={true} deleteEvent={deleteEvent} />
-          ) : <h3>No events found</h3>
+          ) : <h3>No events to manage</h3>
         }
       </Container>
       </ThemeProvider>
