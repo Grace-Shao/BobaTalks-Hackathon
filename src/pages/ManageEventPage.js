@@ -2,72 +2,84 @@ import '../styles/style.css';
 import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useEffect } from 'react';
+import EventCard from '../components/EventCard';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from '../context/AuthContext';
+
+const theme = createTheme({
+  palette: {
+    custom: {
+      main: '#FFFFFF',
+      light: '#FFFFFF',
+      dark: '#FFFFFF',
+      contrastText: '#FFFFFF',
+    },
+  },
+});
 
 export default function ManageEventPage() {
-    const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: ''})
-    const numberFields = ['goal_amount']; // add any other number fields here
-    // fetch all events from a user
 
-    // dispaly all events and their fields to edit (including ty notes) (can't change goal amt tho)
-    // can delete the event
+  const { user } = useAuth();
 
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    axios.get('http://localhost:5000/events/user/' + user.email)
+      .then(response => {
+        let events = []
 
-    const createEvent = async (event) => {
-        event.preventDefault();
-        axios.post('http://localhost:5000/events', post)
-            .then(response => {
-                console.log(response.data);
-                alert('Event successfully created!');
+        for (let event of response.data) {
+          let newEvent = {
+            ...event,
+            end_date: new Date(event.end_date),
+            start_date: new Date(event.start_date)
+          }
 
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-    const handleChange = (event) => {
-        // form input element that the user is interacting with
-        const {name, value} = event.target;
-        setPost(prevPost => ({
-            ...prevPost, 
-            [name]: numberFields.includes(name) ? Number(value) : value
-        }));
-    }
+          events.push(newEvent)
+        }
+
+        setEvents(events);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }, []);
+
     return (
-        <div>
-            <Navbar />
-            <Container
-                sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                pt: { xs: 14, sm: 20 },
-                pb: { xs: 8, sm: 12 },
-                }}
-            >
-            <h1>Create an Event</h1>
-            <form onSubmit={createEvent}>
-                <label htmlFor="event_name">Event Name:</label>
-                <input type="text" id="event_name" name="event_name" onChange={handleChange} />
-
-                <label htmlFor="event_owner">Event Owner:</label>
-                <input type="text" id="event_owner" name="event_owner" onChange={handleChange} />
-
-                <label htmlFor="event_description">Event Description:</label>
-                <input type="text" id="event_description" name="event_description" onChange={handleChange} />
-
-                <label htmlFor="start_date">Start Date:</label>
-                <input type="date" id="start_date" name="start_date" onChange={handleChange} />
-
-                <label htmlFor="end_date">End Date:</label>
-                <input type="date" id="end_date" name="end_date" onChange={handleChange} />
-
-                <label htmlFor="goal_amount">Goal Amount:</label>
-                <input type="number" id="goal_amount" name="goal_amount" onChange={handleChange} />
-
-                <button type="submit">Create Campaign</button>
-            </form>
-            </Container>
-        </div>
+    <ThemeProvider theme={theme}>
+          {/* <AppBar
+            position="fixed"
+            sx={{
+              boxShadow: 0,
+              bgcolor: 'transparent',
+              backgroundImage: 'none',
+              mt: 2,
+            }}
+          ></AppBar> */}
+      <Container
+        className = "width-no-space"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          pt: { xs: 12, sm: 12 },
+          pb: { xs: 12, sm: 12 },
+          px: 0,
+          backgroundColor: '#D3E9FF',
+          minHeight: '100vh',
+        }}
+      >
+        <Navbar />
+        <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
+        Manage Events
+        </Typography>
+        {
+          events && events.length > 0 ? events.map((event, index) =>
+            <EventCard event={event} key={index} />
+          ) : <h3>No events found</h3>
+        }
+      </Container>
+      </ThemeProvider>
     );
-  }
+}

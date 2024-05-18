@@ -121,7 +121,8 @@ function Navbar() {
                       <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Create Event</h4>
                     </MenuItem>
                     <MenuItem
-                      onClick={() => scrollToSection('testimonials')}
+                      component={Link}
+                      to="/ManageEventPage"
                       sx={{ py: '6px', px: '12px' }}
                     >
                       <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Manage Event</h4>
@@ -149,7 +150,7 @@ function Navbar() {
                 >
                   <Button
                     color="custom"
-                    variant="outlined" 
+                    variant="outlined"
                     href="/SignIn"
                   >
                     Sign in
