@@ -51,7 +51,7 @@ export default function EventCard({event, manageEventView, deleteEvent}) {
             )}
             {manageEventView && (
                 <>
-                    <Link to={`EditEvent/${event._id}`}>
+                    <Link to={`EditEvent/${event._id}`} style={{ marginRight: "1vw", marginLeft: "10vw"}}>
                         <Button color="custom"
                         variant="outlined">
                             Edit Event
