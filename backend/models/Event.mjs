@@ -8,7 +8,8 @@ const eventSchema = new mongoose.Schema({
   event_description: { type: String, required: true },
   end_date: { type: Date, required: true },
   start_date: { type: Date, required: true },
-  thank_you_note: [{ type: String }] // Array of strings
+  thank_you_note: [{ type: String }], // Array of strings
+  img_url: { type: String },
 });
 
 const Event = mongoose.model('event', eventSchema);
