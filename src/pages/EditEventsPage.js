@@ -125,16 +125,8 @@ export default function EditEventPage() {
                 id="start_date" name="start_date" value={post ? post.start_date : ''}  onChange={handleChange} label="Start Date (YYYY-MM-DD)" variant="outlined" />
         </Grid>
         <Grid item>
-        <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="start_time" name="start_time"  onChange={handleChange} label="Start Time" variant="outlined" />
-        </Grid>
-        <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
                 id="end_date" name="end_date" value={post ? post.end_date : ''}  onChange={handleChange} label="End Date (YYYY-MM-DD)" variant="outlined" />
-        </Grid>
-        <Grid item>
-        <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="end_time" name="end_time"  onChange={handleChange} label="End Time" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
