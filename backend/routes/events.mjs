@@ -177,7 +177,7 @@ router.put("/:id", async (req, res) => {
  */
 router.put("/donate/:id", async (req, res) => {
   const eventId = req.params.id;
-  const { donated, note } = req.body;
+  const { donation_amount, thank_you_note } = req.body;
 
   try {
     const originalEvent = await Event.findById(eventId);
@@ -186,12 +186,12 @@ router.put("/donate/:id", async (req, res) => {
     }
 
     // Update fields (only if they are provided and valid)
-    if (donated !== undefined)
-      originalEvent.current_money += donated;
+    if (donation_amount !== undefined)
+      originalEvent.current_money += donation_amount;
 
     // Add new notes to event
-    if (note) {
-      originalEvent.thank_you_note.push(note);
+    if (thank_you_note) {
+      originalEvent.thank_you_note.push(thank_you_note);
     }
 
     // Save the updates
