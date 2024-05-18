@@ -76,7 +76,7 @@ export default function ManageEventPage() {
         </Typography>
         {
           events && events.length > 0 ? events.map((event, index) =>
-            <EventCard event={event} key={index} />
+            <EventCard event={event} key={index} manageEventView={true} />
           ) : <h3>No events found</h3>
         }
       </Container>

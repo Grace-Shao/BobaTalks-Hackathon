@@ -28,7 +28,6 @@ const theme = createTheme({
 
 function Navbar() {
   const { user } = useAuth();
-  console.log(user)
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
