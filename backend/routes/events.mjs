@@ -101,6 +101,7 @@ router.post("/", async (req, res) => {
     end_date,
     event_description,
     start_date,
+    img_url,
   } = req.body;
 
   // Create a new event instance using Mongoose
@@ -113,6 +114,7 @@ router.post("/", async (req, res) => {
     end_date: new Date(end_date),
     start_date: new Date(start_date),
     thank_you_note: [],
+    img_url,
   });
 
   try {

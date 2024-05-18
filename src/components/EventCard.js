@@ -14,8 +14,6 @@ export default function EventCard({event}) {
         <div className="column">
             <h1>{event.event_name}</h1>
             <p><i>Organized by: {event.event_owner}</i></p>
-            {/* <b><p>Goal: ${event.goal_amount}</p>
-            <p>Current: ${event.current_money}</p></b> */}
             <Tooltip title={`Current Money: ${event.current_money}, Goal: ${event.goal_amount}`}>
                 <LinearProgress variant="determinate" value={progress}
                 sx={{ 
@@ -27,17 +25,23 @@ export default function EventCard({event}) {
                 backgroundColor: 'green.500', 
                 } 
             }}  />
-            </Tooltip>
-            
+            </Tooltip>    
         </div>
+
         <div className="column">
             <p>Ending on {event.end_date.toISOString().substring(0, 10)}</p>
-        </div>
+            {event.img_url ? (
+            <img
+                src={event.img_url}
+                height="150px"
+                width="250px"
+                style={{ objectFit: 'cover', borderRadius: '10px'}}
+            />
+            ) : null} 
             <Button color="custom"
               variant="outlined"
               onClick={() => setIsExpanded(!isExpanded)}>
             Learn More</Button>
-            {/*conditional render this*/}
             {isExpanded && (
                 <>
                     <p>{event.event_description}</p>
@@ -50,6 +54,7 @@ export default function EventCard({event}) {
                     </Link>
                 </>
             )}
+        </div>
         </div>
     );
 }

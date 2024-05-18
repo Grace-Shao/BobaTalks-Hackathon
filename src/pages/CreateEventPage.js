@@ -39,6 +39,8 @@ export default function CreateEventPage() {
                 console.error(error);
             });
     }
+
+
     const handleChange = (event) => {
         // form input element that the user is interacting with
         const {name, value} = event.target;
@@ -97,6 +99,11 @@ export default function CreateEventPage() {
                 id="goal_amount" name="goal_amount" onChange={handleChange} label="Goal Amount" variant="outlined" />
         </Grid>
         <Grid item>
+        <Grid item>
+        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}} 
+                id="img_url" name="img_url" onChange={handleChange} label="Image url" variant="outlined" />
+        </Grid>
+        <Grid item></Grid>
        
         <FormGroup>
         <FormControlLabel sx={{mt: -5}}control={<Checkbox />} label="Display Amount Raised" />
