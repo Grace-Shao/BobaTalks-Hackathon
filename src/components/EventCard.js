@@ -4,14 +4,11 @@ import '../styles/Card.css'
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import Tooltip from '@mui/material/Tooltip';
+import axios from 'axios';
 
-export default function EventCard({event, manageEventView}) {
+export default function EventCard({event, manageEventView, deleteEvent}) {
     const [isExpanded, setIsExpanded] = useState(false);
     const progress = (event.current_money / event.goal_amount) * 100;
-
-    const deleteEvent = () => {
-
-    }
 
     return (
         <div className='card'>
@@ -73,7 +70,7 @@ export default function EventCard({event, manageEventView}) {
                     </Link>
                     <Button color="custom"
                     variant="outlined"
-                    onClick={() => deleteEvent()}>
+                    onClick={() => deleteEvent(event._id)}>
                         Delete Event
                     </Button>
                 </>
