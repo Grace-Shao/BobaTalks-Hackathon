@@ -31,7 +31,6 @@ export default function CreateEventPage() {
         event.preventDefault();
         axios.post('http://localhost:5000/events', post)
             .then(response => {
-                console.log(response.data);
                 alert('Event successfully created!');
 
             })

@@ -216,9 +216,10 @@ router.put("/donate/:id", async (req, res) => {
  */
 router.delete("/:id", async (req, res) => {
   try {
+    console.log("start")
     // Find the document by ID and delete it in one operation
     const result = await Event.findByIdAndDelete(req.params.id);
-
+    console.log(result)
     // Check if an event was actually found and deleted
     if (!result) {
       return res.status(404).send({ message: "Event not found." });
