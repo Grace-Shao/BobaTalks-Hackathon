@@ -15,6 +15,7 @@ export default function EventCard({event, manageEventView, deleteEvent}) {
         <div className="column">
             <h1>{event.event_name}</h1>
             <p><i>Organized by: {event.event_owner}</i></p>
+            <p>{event.event_description}</p>
             <Tooltip title={`Current Money: ${event.current_money}, Goal: ${event.goal_amount}`}>
                 <LinearProgress variant="determinate" value={progress}
                 sx={{ 
@@ -30,35 +31,23 @@ export default function EventCard({event, manageEventView, deleteEvent}) {
         </div>
 
         <div className="column">
-            <p>Ending on {event.end_date.toISOString().substring(0, 10)}</p>
+            <p style={{ marginLeft: "10vw"}}>Ending on {event.end_date.toISOString().substring(0, 10)}</p>
             {event.img_url ? (
             <img
                 src={event.img_url}
                 height="150px"
                 width="250px"
-                style={{ objectFit: 'cover', borderRadius: '10px'}}
+                style={{ marginLeft: "10vw", objectFit: 'cover', borderRadius: '10px'}}
             />
             ) : null} 
             {!manageEventView && (
-                <>
-                    <Button color="custom"
-                    variant="outlined"
-                    onClick={() => setIsExpanded(!isExpanded)}>
-                        Learn More
+                <Link to={`DonatePage/${event._id}`} style={{ marginLeft: "10vw"}}>
+                    <Button 
+                        color="custom"
+                        variant="outlined"
+                    >Donate
                     </Button>
-                    {isExpanded && (
-                        <>
-                            <p>{event.event_description}</p>
-                            <Link to={`DonatePage/${event._id}`}>
-                                <Button 
-                                    color="custom"
-                                    variant="outlined"
-                                >Donate
-                                </Button>
-                            </Link>
-                        </>
-                    )}
-                </>
+                </Link>
             )}
             {manageEventView && (
                 <>
