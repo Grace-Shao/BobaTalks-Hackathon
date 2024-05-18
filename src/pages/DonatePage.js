@@ -4,6 +4,12 @@ import Container from '@mui/material/Container';
 import axios from 'axios';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import {
+    ApplePay,
+    GooglePay, 
+    CreditCard,
+    PaymentForm
+} from "react-square-web-payments-sdk";
 
 export default function DonatePage() {
     const { id } = useParams();
@@ -74,6 +80,38 @@ export default function DonatePage() {
 
                     <label htmlFor="thank_you_note">Thank You Note (optional):</label>
                     <input type="text" id="thank_you_note" name="thank_you_note" onChange={handleChange} />
+
+                    <PaymentForm
+                        applicationId="sandbox-sq0idb-yMiA_9_FWwmrR72EsRDZ3A"
+                        cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
+                            console.log(token)
+                            console.log(verifiedBuyer)
+                        }}
+                        createPaymentRequest={() => ({
+                            countryCode: "US",
+                            currencyCode: "USD",
+                            total: {
+                                amount: "1.00",
+                                label: "Total",
+                            },
+                        })}
+                        locationId="LTH8JVJVKBYEG"
+                    >
+                        <ApplePay />
+                        <GooglePay />
+                        <CreditCard
+                        buttonProps={{
+                            css: {
+                            backgroundColor: "#771520",
+                            fontSize: "14px",
+                            color: "#fff",
+                            "&:hover": {
+                                backgroundColor: "#530f16",
+                            },
+                            },
+                        }}
+                        />
+                    </PaymentForm>
 
                     <button type="submit">Submit</button>
                 </form>
