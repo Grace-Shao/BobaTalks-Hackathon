@@ -29,7 +29,7 @@ export default function CreateEventPage() {
 
     const createEvent = async (event) => {
         event.preventDefault();
-        axios.post('http://localhost:5000/events', post)
+        axios.post(`${process.env.REACT_APP_API_ENDPOINT}/events`, post)
             .then(response => {
                 alert('Event successfully created!');
 

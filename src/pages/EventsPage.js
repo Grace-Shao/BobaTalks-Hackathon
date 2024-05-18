@@ -23,7 +23,7 @@ const theme = createTheme({
 export default function EventsPage() {
   const [events, setEvents] = useState([]); 
   useEffect(() => {
-    axios.get('http://localhost:5000/events')
+    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events`)
       .then(response => {
         let events = []
 
