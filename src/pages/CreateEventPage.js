@@ -69,7 +69,7 @@ export default function CreateEventPage() {
         Event Details
         </Typography>
         <form onSubmit={createEvent}>
-            <Grid container spacing={8}>
+        <Grid container spacing={8}>
         <Grid item>
         <TextField sx={{marginLeft: 10, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
                 id="event_name" name="event_name" onChange={handleChange} label="Title of Event" variant="outlined" />
@@ -84,7 +84,7 @@ export default function CreateEventPage() {
         </Grid>
         <Grid item>
         <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="start_time" name="start_time"  onChange={handleChange} label="Start Time" variant="outlined" />
+                id="event_description" name="event_description"  onChange={handleChange} label="Event Description" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
@@ -92,20 +92,11 @@ export default function CreateEventPage() {
         </Grid>
         <Grid item>
         <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="end_time" name="end_time"  onChange={handleChange} label="End Time" variant="outlined" />
+                id="image_url" name="image_url"  onChange={handleChange} label="Image URL" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
                 id="goal_amount" name="goal_amount" onChange={handleChange} label="Goal Amount" variant="outlined" />
-        </Grid>
-        <Grid item>
-        <Grid item>
-        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="img_url" name="img_url" onChange={handleChange} label="Image url" variant="outlined" />
-        </Grid>
-        <Grid item></Grid>
-        <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="event_description" name="event_description" onChange={handleChange} label="Description" variant="outlined" />
         </Grid>
         <Grid item>
         <FormGroup>
@@ -116,7 +107,7 @@ export default function CreateEventPage() {
         <Button type="onSubmit" style={{
         backgroundColor: "#EDAB6F",
         width: '100px',
-        marginLeft: '49%'
+        marginLeft: '10%'
     }} variant="contained" onSubmit={createEvent}>Create</Button>
      </form>
 
