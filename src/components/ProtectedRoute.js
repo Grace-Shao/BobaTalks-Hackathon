@@ -1,11 +1,15 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  // Placeholder for auth check. Replace `isLoggedIn` with your actual logic
-  const isLoggedIn = localStorage.getItem('user') !== null; // Example: Check if user info exists in localStorage
+  const {user} = useAuth();
 
-  return isLoggedIn ? children : <Navigate to="/SignIn" replace />;
+  if (user !== null) {
+    return children
+  } else {
+    return <Navigate to="/SignIn" replace />
+  }
 };
 
 export default ProtectedRoute;

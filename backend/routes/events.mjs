@@ -50,7 +50,7 @@ router.get("/user/:username", async (req, res) => {
  * Get a single event by ID
  */
 router.get("/:id", async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.query;
 
   if (!username) {
     return res.status(404).send("Please input a username.");
@@ -137,7 +137,47 @@ router.post("/", async (req, res) => {
  */
 router.put("/:id", async (req, res) => {
   const eventId = req.params.id;
-  const { current_money, new_notes } = req.body;
+  const updatableFields = [
+    'goal_amount', 'event_name', 'event_owner', 'event_description', 
+    'end_date', 'start_date', 'img_url'
+  ];
+
+  try {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).send({ error: "Event to edit not found" });
+    }
+
+    // Loop through each item specified in updates, update event with their valuess
+    updatableFields.forEach(key => {
+      if (req.body[key] !== undefined) {
+        event[key] = req.body[key];
+      }
+    });
+    
+    // Validate the updated document before saving
+    await event.validate();
+
+    // Save the updates
+    const result = await event.save();
+    res.status(200).send({ message: "Event updated successfully", data: result });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      res.status(400).send({ error: "Validation error: " + err.message });
+    } else {
+      console.error("Error updating event:", err);
+      res.status(500).send({ error: "Internal server error" });
+    }
+  }
+});
+
+
+/**
+ * Donate to an existing event
+ */
+router.put("/donate/:id", async (req, res) => {
+  const eventId = req.params.id;
+  const { donation_amount, thank_you_note } = req.body;
 
   try {
     const originalEvent = await Event.findById(eventId);
@@ -146,12 +186,12 @@ router.put("/:id", async (req, res) => {
     }
 
     // Update fields (only if they are provided and valid)
-    if (current_money !== undefined)
-      originalEvent.current_money = current_money;
+    if (donation_amount !== undefined)
+      originalEvent.current_money += donation_amount;
 
     // Add new notes to event
-    for (let note of new_notes) {
-      originalEvent.thank_you_note.push(note);
+    if (thank_you_note) {
+      originalEvent.thank_you_note.push(thank_you_note);
     }
 
     // Save the updates
@@ -176,9 +216,10 @@ router.put("/:id", async (req, res) => {
  */
 router.delete("/:id", async (req, res) => {
   try {
+    console.log("start")
     // Find the document by ID and delete it in one operation
     const result = await Event.findByIdAndDelete(req.params.id);
-
+    console.log(result)
     // Check if an event was actually found and deleted
     if (!result) {
       return res.status(404).send({ message: "Event not found." });
