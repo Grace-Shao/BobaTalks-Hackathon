@@ -91,7 +91,7 @@ export default function CreateEventPage() {
         </Grid>
         <Grid item>
         <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="image_url" name="image_url"  onChange={handleChange} label="Image URL" variant="outlined" />
+                id="image_url" name="img_url"  onChange={handleChange} label="Image URL" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
