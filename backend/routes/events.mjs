@@ -136,7 +136,6 @@ router.post("/", async (req, res) => {
  * Edit an existing event
  */
 router.put("/:id", async (req, res) => {
-  console.log("start")
   const eventId = req.params.id;
   const updatableFields = [
     'goal_amount', 'event_name', 'event_owner', 'event_description', 
@@ -151,13 +150,10 @@ router.put("/:id", async (req, res) => {
 
     // Loop through each item specified in updates, update event with their valuess
     updatableFields.forEach(key => {
-      console.log(req.body[key])
       if (req.body[key] !== undefined) {
         event[key] = req.body[key];
       }
     });
-
-    console.log(event)
     
     // Validate the updated document before saving
     await event.validate();
