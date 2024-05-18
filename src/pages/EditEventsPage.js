@@ -108,38 +108,37 @@ export default function EditEventPage() {
                 }}
             >
             <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
-        Event Details
+        Edit Event Details
         </Typography>
         <form onSubmit={editEvent}>
-            <Grid container spacing={8}>
+        <Grid container spacing={8}>
         <Grid item>
         <TextField sx={{marginLeft: 10, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
-                id="event_name" name="event_name" value={post ? post.event_name : ''}  onChange={handleChange} label="Title of Event" variant="outlined" />
+                id="event_name" name="event_name" value={post ? post.event_name : ''} onChange={handleChange} label="Title of Event" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginRight: 10, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="event_owner" name="event_owner" value={post ? post.event_owner : ''}  onChange={handleChange} label="Organization" variant="outlined"  />
+                id="event_owner" name="event_owner" value={post ? post.event_owner : ''}onChange={handleChange} label="Organization" variant="outlined" />
         </Grid>
         <Grid item>
         <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
-                id="start_date" name="start_date" value={post ? post.start_date : ''}  onChange={handleChange} label="Start Date (YYYY-MM-DD)" variant="outlined" />
+                id="start_date" name="start_date" value={post ? post.start_date : ''} onChange={handleChange} label="Start Date (YYYY-MM-DD)" variant="outlined" />
         </Grid>
         <Grid item>
-        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
-                id="end_date" name="end_date" value={post ? post.end_date : ''}  onChange={handleChange} label="End Date (YYYY-MM-DD)" variant="outlined" />
-        </Grid>
-        <Grid item>
-        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="goal_amount" name="goal_amount" value={post ? post.goal_amount : ''}  onChange={handleChange} label="Goal Amount" variant="outlined" />
-        </Grid>
-        <Grid item>
-        <Grid item>
-        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="img_url" name="img_url" value={post ? post.img_url : ''}  onChange={handleChange} label="Image url" variant="outlined" />
-        </Grid>
-        <Grid item></Grid>
         <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
-                id="event_description" name="event_description" value={post ? post.event_description : ''}  onChange={handleChange} label="Description" variant="outlined" />
+                id="event_description" name="event_description"  value={post ? post.event_description : ''} onChange={handleChange} label="Event Description" variant="outlined" />
+        </Grid>
+        <Grid item>
+        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450}}
+                id="end_date" name="end_date" value={post ? post.end_date : ''} onChange={handleChange} label="End Date (YYYY-MM-DD)" variant="outlined" />
+        </Grid>
+        <Grid item>
+        <TextField sx={{marginRight: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
+                id="image_url" name="image_url"  value={post ? post.image_url : ''}onChange={handleChange} label="Image URL" variant="outlined" />
+        </Grid>
+        <Grid item>
+        <TextField sx={{marginLeft: 10, mt: -5, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 450, float:'right'}}
+                id="goal_amount" name="goal_amount" value={post ? post.goal_amount : ''} onChange={handleChange} label="Goal Amount" variant="outlined" />
         </Grid>
         <Grid item>
         <FormGroup>
@@ -150,8 +149,9 @@ export default function EditEventPage() {
         <Button type="onSubmit" style={{
         backgroundColor: "#EDAB6F",
         width: '100px',
-        marginLeft: '49%'
-    }} variant="contained" onSubmit={editEvent}>Create</Button>
+        marginLeft: '10%',
+        marginTop: '2%'
+    }} variant="contained" onSubmit={editEvent}>Save Changes</Button>
      </form>
 
 
