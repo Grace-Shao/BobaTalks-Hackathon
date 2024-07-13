@@ -13,9 +13,13 @@ BobaShare is an app dedicated to help groups and nonprofits fundraise money for 
 ## Authors
 
 **Natasha Valluri**: UI/UX Designer
+
 **Grace Shao**: Frontend Developer
+
 **Natasha Setiadi**: Frontend Developer
+
 **Alex Shen**: Backend Developer
+
 **Adi Shah**: Backend Developer
 
 ## Getting Started
