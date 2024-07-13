@@ -1,6 +1,9 @@
 # BobaShare
 BobaShare is an app dedicated to help groups and nonprofits fundraise money for buble tea purchases in order to run events. The site partners with local bubble tea shops and small businesses in order to allow local shops to gain more traction.
 
+View our demo here:
+https://github.com/user-attachments/assets/d6f52952-b783-4323-b913-80a65ab731f6
+
 ## Built With
 ![React](https://img.shields.io/static/v1?style=for-the-badge&message=React&color=222222&logo=React&logoColor=61DAFB&label=)
 ![JavaScript](https://img.shields.io/static/v1?style=for-the-badge&message=JavaScript&color=222222&logo=JavaScript&logoColor=F7DF1E&label=)
