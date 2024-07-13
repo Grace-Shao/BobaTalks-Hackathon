@@ -49,6 +49,7 @@ export default function DonatePage() {
         try {
             await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
             console.log('Donation submitted');
+            alert('Thank you for the donation!');
         } catch (error) {
             console.error(error);
         }
@@ -121,7 +122,7 @@ export default function DonatePage() {
               </Button>
               <input
               className="donateCustom"
-                    // onChange={() => handleCustom()}
+                    onChange={(e) => handleDonation(Number(e.target.value))}
                     placeholder='CUSTOM'
                 color="custom"
                 variant="outlined" 

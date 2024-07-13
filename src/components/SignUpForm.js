@@ -58,6 +58,7 @@ export default function SignUpForm() {
           maxWidth: 0,
           width: '100%',
           bgcolor: '#EDAB6F',
+          minHeight: '100vh',
         }}
       >
         <span className="circle"></span>
