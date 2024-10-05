@@ -1,12 +1,12 @@
 import express from "express"
 import cors from 'cors';
 import path from "path"
-import "./loadEnv.mjs"
+import "./loadEnv.js"
 import "express-async-errors";
-import indexRouter from './routes/index.mjs'
-import eventsRouter from './routes/events.mjs'
-import userRouter from './routes/users.mjs'
-import db from './db/conn.mjs';
+import indexRouter from './routes/index.js'
+import eventsRouter from './routes/events.js'
+import userRouter from './routes/users.js'
+import db from './db/conn.js';
 
 const app = express()
 app.use(cors());
