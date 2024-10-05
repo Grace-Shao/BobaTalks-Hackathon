@@ -8,6 +8,8 @@ import authRouter from './routes/auth.js'
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import MongoStore from "connect-mongo";
+import mongoose from 'mongoose';
 
 const app = express()
 app.use(cors());
@@ -22,8 +24,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: 'sessions',
+      client: mongoose.connection.getClient(),
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
@@ -43,7 +44,6 @@ import './db/conn.js';
 
 // Initialize passport config
 import './config/passport.js';
-import MongoStore from "connect-mongo";
 
 app.use('/api', indexRouter)
 app.use('/api/events', eventsRouter)
