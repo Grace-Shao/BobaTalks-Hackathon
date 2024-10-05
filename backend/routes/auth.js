@@ -5,6 +5,13 @@ import { body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
+/**
+ * @route POST /api/auth/signup
+ * @desc Register a new user
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @returns {object} - User registered successfully
+ */
 router.post(
   '/signup', 
   [
@@ -47,6 +54,13 @@ router.post(
   }
   });
 
+/**
+ * @route POST /api/auth/login
+ * @desc Login a user
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @returns {object} - Login successful
+ */
 router.post(
   '/login', 
   [
@@ -67,7 +81,7 @@ router.post(
         return res.status(401).send('Invalid credentials');
       }
 
-      const isMatch = await user.comparePassword(password);
+      const isMatch = await user.comparePasswords(password);
       if (!isMatch) {
         return res.status(401).send('Invalid credentials');
       }
@@ -93,6 +107,11 @@ router.post(
     }
   });
 
+/**
+ * @route POST /api/auth/logout
+ * @desc Logout a user
+ * @returns {object} - User logged out
+ */
 router.post('/logout', (req, res) => {
   res
     .cookie('token', '', {
