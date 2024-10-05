@@ -1,6 +1,5 @@
 import express from "express";
 import User from '../models/User.js';
-import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
 
 const router = express.Router();
@@ -34,18 +33,7 @@ router.post(
       user = new User({ email, password });
       const result = await user.save();
 
-      // Generate JWT
-      const payload = { user_id: user._id, role: user.role };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '1h'
-      })
-
       res
-      .cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      })
       .status(201)
       .json({ msg: 'User registered successfully' });
     } catch (error) {
@@ -85,20 +73,8 @@ router.post(
       if (!isMatch) {
         return res.status(401).send('Invalid credentials');
       }
-      
-      // Generate JWT
-      const payload = { userId: user._id, role: user.role };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      });
 
-      // Send token in HTTP-only cookie
       res
-        .cookie('token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-        })
         .status(200)
         .json({ msg: 'Login successful' });
     } catch (error) {
