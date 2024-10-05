@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   google_id: {
     type: String,
+    unique: true,
     sparse: true,
   },
 }, { timestamps: true });
