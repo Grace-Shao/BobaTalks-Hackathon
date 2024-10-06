@@ -36,8 +36,7 @@ function Navbar() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md')); // Adjust breakpoint as needed
 
   const { user } = useAuth();
-  console.log(user)
-
+ 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {

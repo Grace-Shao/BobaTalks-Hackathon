@@ -12,7 +12,13 @@ router.get(
   '/me',
   (req, res) => {
     if (req.isAuthenticated()) {
-      return res.status(200).json({ user: req.user });
+      return res.status(200).json(
+        {  
+          user: {
+            email: req.user.email,
+            role: req.user.role,
+          }
+        });
     }
     return res.status(401).json({ msg: 'User not authenticated' });
   }
