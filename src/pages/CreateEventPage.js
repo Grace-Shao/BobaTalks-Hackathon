@@ -8,19 +8,8 @@ import Grid from '@mui/material/Grid';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
-const theme = createTheme({
-    palette: {
-      custom: {
-        main: '#D3E9FF',
-        light: '#D3E9FF',
-        dark: '#D3E9FF',
-        contrastText: '#D3E9FF',
-      },
-    },
-  });
 
 export default function CreateEventPage() {
     const [post, setPost] = useState()
@@ -48,7 +37,6 @@ export default function CreateEventPage() {
         }));
     }
     return (
-        <ThemeProvider theme={theme}>
         <div>
             <Container
             className = "width-no-space"
@@ -111,6 +99,5 @@ export default function CreateEventPage() {
 
             </Container>
         </div>
-        </ThemeProvider>
     );
   }
