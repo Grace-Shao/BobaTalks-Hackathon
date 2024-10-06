@@ -23,6 +23,7 @@ router.get("/", async (req, res) => {
         },
       },
     ]);
+    
     res.status(200).send(results);
   } catch (err) {
     console.error("Error fetching events:", err);

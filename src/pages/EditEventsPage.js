@@ -38,7 +38,7 @@ export default function EditEventPage() {
       if (!eventId || !user || !user.email) return;
 
       console.log(eventId, user.email)
-        axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events/${eventId}`, {
+        axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/events/${eventId}`, {
           params: { username: user.email }
         })
         .then(response => {

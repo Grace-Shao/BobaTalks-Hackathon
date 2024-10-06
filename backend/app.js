@@ -19,14 +19,19 @@ app.use(cors({
 // allow express to parse json bodies in requests
 app.use(express.json()); 
 app.use(cookieParser());
+
+const sessionsStore = MongoStore.create({
+  client: mongoose.connection.getClient(),
+  dbName: 'boba_server',
+  collectionName: 'sessions',
+});
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'session_secret',
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({
-      client: mongoose.connection.getClient(),
-    }),
+    store: sessionsStore,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
       httpOnly: true,

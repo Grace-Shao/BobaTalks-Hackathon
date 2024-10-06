@@ -3,9 +3,7 @@ import EventCard from "../components/EventCard";
 import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom'
 import '../styles/Card.css'
-import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -22,7 +20,7 @@ const theme = createTheme({
 export default function EventsPage() {
   const [events, setEvents] = useState([]); 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events`)
+    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/events`)
       .then(response => {
         let events = []
 

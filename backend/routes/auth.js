@@ -6,6 +6,19 @@ import { body, validationResult } from 'express-validator';
 const router = express.Router();
 
 /**
+ * 
+ */
+router.get(
+  '/me',
+  (req, res) => {
+    if (req.isAuthenticated()) {
+      return res.status(200).json({ user: req.user });
+    }
+    return res.status(401).json({ msg: 'User not authenticated' });
+  }
+)
+
+/**
  * @route POST /api/auth/signup
  * @desc Register a new user
  * @param {string} email - User's email
