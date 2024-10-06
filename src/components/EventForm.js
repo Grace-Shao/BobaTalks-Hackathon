@@ -6,14 +6,19 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
-import DatePicker from '@mui/lab/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
   const [formValues, setFormValues] = useState(initialFormValues);
+  console.log(formValues)
+
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(null);
-  
+
   const allOrganizerEmails = [
     'a@gmail.com',
     'alexander.shen@gmail.com',
@@ -21,13 +26,16 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
     'c@gmail.com'
   ]
 
-  const handleChange = (field) => (event, value) => {
+  const handleChange = (field, value) => {
+    console.log("handle change")
+    console.log({field, value})
+
     if (field === 'startDate' || field === 'endDate') {
       setFormValues((prev) => ({ ...prev, [field]: value }));
     } else if (field === 'organizers') {
       setFormValues((prev) => ({ ...prev, organizers: value }));
     } else {
-      setFormValues((prev) => ({ ...prev, [field]: event.target.value }));
+      setFormValues((prev) => ({ ...prev, [field]: value }));
     }
 
     // Clear specific field error when user starts typing/selecting
@@ -92,6 +100,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
   };
 
   const handleSubmit = (e) => {
+    console.log("submited")
     e.preventDefault();
     setSubmitError('');
     setSubmitSuccess('');
@@ -107,24 +116,27 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
       setErrors({});
     } else {
       setSubmitError('Please fix the errors above and try again.');
+      console.log('Form has errors');
     }
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        maxWidth: 600,
-        margin: 'auto',
-        padding: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-      }}
-      noValidate
-    >
-      <Typography variant="h5" align="center" gutterBottom>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          maxWidth: 600,
+          margin: 'auto',
+          padding: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <Typography variant="h5" align="center" gutterBottom>
           Create Donation Event
         </Typography>
         <Grid container spacing={2}>
@@ -136,7 +148,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               fullWidth
               required
               value={formValues.eventName}
-              onChange={handleChange('eventName')}
+              onChange={e => handleChange('eventName', e.targetvalue)}
               error={Boolean(errors.eventName)}
               helperText={errors.eventName}
             />
@@ -151,7 +163,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               fullWidth
               required
               value={formValues.currentMoney}
-              onChange={handleChange('currentMoney')}
+              onChange={e => handleChange('currentMoney', e.target.value)}
               inputProps={{ min: 0 }}
               error={Boolean(errors.currentMoney)}
               helperText={errors.currentMoney}
@@ -165,7 +177,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               fullWidth
               required
               value={formValues.goalAmount}
-              onChange={handleChange('goalAmount')}
+              onChange={e => handleChange('goalAmount', e.target.value)}
               inputProps={{ min: 0 }}
               error={Boolean(errors.goalAmount)}
               helperText={errors.goalAmount}
@@ -179,7 +191,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               options={allOrganizerEmails}
               getOptionLabel={(option) => option}
               value={formValues.organizers}
-              onChange={handleChange('organizers')}
+              onChange={e => handleChange('organizers', e.target.value)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -203,7 +215,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               rows={4}
               fullWidth
               value={formValues.description}
-              onChange={handleChange('description')}
+              onChange={e => handleChange('description', e.target.value)}
             />
           </Grid>
 
@@ -212,34 +224,20 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
             <DatePicker
               label="Start Date"
               value={formValues.startDate}
-              onChange={handleChange('startDate')}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  fullWidth
-                  required
-                  error={Boolean(errors.startDate)}
-                  helperText={errors.startDate}
-                />
-              )}
+              onChange={e => handleChange('startDate', e.target.value)}
+              defaultValue={dayjs()}
+              disablePast
+
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <DatePicker
               label="End Date"
               value={formValues.endDate}
-              onChange={handleChange('endDate')}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  fullWidth
-                  required
-                  error={Boolean(errors.endDate)}
-                  helperText={errors.endDate}
-                />
-              )}
+              onChange={e => handleChange('endDate', e.target.value)}
+              defaultValue={dayjs()}
+              minDate={formValues.startDate}
+              disablePast
             />
           </Grid>
 
@@ -251,7 +249,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               type="url"
               fullWidth
               value={formValues.imageUrl}
-              onChange={handleChange('imageUrl')}
+              onChange={e => handleChange('imageUrl', e.target.value)}
               error={Boolean(errors.imageUrl)}
               helperText={errors.imageUrl}
             />
@@ -270,6 +268,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
           </Grid>
         </Grid>
       </Box>
+    </LocalizationProvider>
   );
 }
 
