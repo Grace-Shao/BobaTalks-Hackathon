@@ -10,7 +10,10 @@ import MongoStore from "connect-mongo";
 import mongoose from 'mongoose';
 
 const app = express()
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
 
 // Middleware
 // allow express to parse json bodies in requests
@@ -20,7 +23,7 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || 'session_secret',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: MongoStore.create({
       client: mongoose.connection.getClient(),
     }),
@@ -28,7 +31,7 @@ app.use(
       maxAge: 1000 * 60 * 60 * 24, // 1 day
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
     }
   })
 );

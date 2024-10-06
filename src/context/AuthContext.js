@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (userData) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/auth/signup`, userData);
+      console.log({ 'signup response': response})
     } catch (error) {
       console.error('Signup error:', error.response ? error.response.data : error.message);
     }
@@ -19,10 +20,20 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/auth/login`, credentials);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/login`, 
+        credentials,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      console.log({ 'login response': response})
       
       if (response.status === 200) {
-        let userData = { email: credentials.email }
+        let userData =  response.data.user;
         setUser(userData)
       }
     } catch (error) {
