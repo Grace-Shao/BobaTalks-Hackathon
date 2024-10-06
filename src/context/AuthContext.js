@@ -10,8 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (userData) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/users/signup`, userData);
-      login(userData); 
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/auth/signup`, userData);
     } catch (error) {
       console.error('Signup error:', error.response ? error.response.data : error.message);
     }
@@ -20,12 +19,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/users/login`, credentials);
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/auth/login`, credentials);
       
       if (response.status === 200) {
         let userData = { email: credentials.email }
         setUser(userData)
-        localStorage.setItem('user', JSON.stringify(userData));  // Save to local storage, can probably replace with cookie
       }
     } catch (error) {
       console.error('Login error:', error.response ? error.response.data : error.message);
