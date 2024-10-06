@@ -20,8 +20,14 @@ import { useTheme } from '@mui/material/styles';
 
 const navLinks = [
   { title: 'All Events', path: '/EventsPage' },
-  { title: 'Create Event', path: '/CreateEventPage' },
-  { title: 'Manage Event', path: '/ManageEventPage' },
+  {
+    title: 'Create Event', path: '/CreateEventPage',
+    allowedRoles: ['organizer']
+  },
+  {
+    title: 'Manage Event', path: '/ManageEventPage',
+    allowedRoles: ['organizer']
+  },
   { title: 'See Boba Vendors', path: '/BobaVendorsPage' },
 ]
 
@@ -46,19 +52,26 @@ function Navbar() {
     >
       <List>
         {user
-          ? navLinks.map((item) => (
+          ? navLinks.map((item) => {
+
+            if (user.role != 'admin' && !item.allowedRoles.includes(user.role)) {
+              return null;
+            }
+
+            return (
               <ListItem key={item.title} component={Link} to={item.path}>
                 <ListItemText primary={item.title} />
               </ListItem>
-            ))
+            )
+          })
           : [
-              <ListItem key="Sign In" component={Link} href="/signin">
-                <ListItemText primary="Sign In" />
-              </ListItem>,
-              <ListItem key="Sign Up" component={Link} href="/signup">
-                <ListItemText primary="Sign Up" />
-              </ListItem>,
-            ]}
+            <ListItem key="Sign In" component={Link} href="/signin">
+              <ListItemText primary="Sign In" />
+            </ListItem>,
+            <ListItem key="Sign Up" component={Link} href="/signup">
+              <ListItemText primary="Sign Up" />
+            </ListItem>,
+          ]}
       </List>
     </Box>
   );
