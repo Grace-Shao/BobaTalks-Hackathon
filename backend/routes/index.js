@@ -1,6 +1,6 @@
 import express from "express"
-import eventsRouter from './routes/events.js'
-import authRouter from './routes/auth.js'
+import eventsRouter from './events.js'
+import authRouter from './auth.js'
 
 const router = express.Router()
 

@@ -1,191 +1,151 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 
+import { Link } from 'react-router-dom';
+
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import '../styles/style.css';
+
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '@mui/material/styles';
 
-
-const theme = createTheme({
-  palette: {
-    custom: {
-      main: '#FFFFFF',
-      light: '#FFFFFF',
-      dark: '#FFFFFF',
-      contrastText: '#FFFFFF',
-    },
-  },
-});
+const navLinks = [
+  { title: 'All Events', path: '/EventsPage' },
+  { title: 'Create Event', path: '/CreateEventPage' },
+  { title: 'Manage Event', path: '/ManageEventPage' },
+  { title: 'See Boba Vendors', path: '/BobaVendorsPage' },
+]
 
 function Navbar() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); // Adjust breakpoint as needed
+
   const { user } = useAuth();
-  const [open, setOpen] = React.useState(false);
+  console.log(user)
 
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen((prevState) => !prevState);
   };
 
-  const scrollToSection = (sectionId) => {
-    const sectionElement = document.getElementById(sectionId);
-    const offset = 128;
-    if (sectionElement) {
-      const targetScroll = sectionElement.offsetTop - offset;
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
-      window.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth',
-      });
-      setOpen(false);
-    }
-  };
+  const drawer = (
+    <Box
+      onClick={handleDrawerToggle}
+      sx={{ width: 250 }}
+      role="presentation"
+    >
+      <List>
+        {user
+          ? navLinks.map((item) => (
+              <ListItem key={item.title} component={Link} to={item.path}>
+                <ListItemText primary={item.title} />
+              </ListItem>
+            ))
+          : [
+              <ListItem key="Sign In" component={Link} href="/signin">
+                <ListItemText primary="Sign In" />
+              </ListItem>,
+              <ListItem key="Sign Up" component={Link} href="/signup">
+                <ListItemText primary="Sign Up" />
+              </ListItem>,
+            ]}
+      </List>
+    </Box>
+  );
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-      <AppBar
-        position="fixed"
-        sx={{
-          boxShadow: 0,
-          bgcolor: 'transparent',
-          backgroundImage: 'none',
-          mt: 2,
-        }}
-      >
-        <Container className="navbar-no-space" maxWidth="lg">
-          <Toolbar
-            variant="regular"
-            sx={(theme) => ({
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexShrink: 0,
-              bgcolor: '#EDAB6F',
-              backdropFilter: 'blur(24px)',
-              maxHeight: 100,
-              border: '1px solid',
-              borderColor: 'divider',
-              // width: '100%',
-              // pl: '100px',
-              // pr: '100px',
-              pt: '0',
-              px: '100%',
-              boxShadow:
-                theme.palette.mode === 'light'
-                  ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
-                  : '0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)',
-            })}
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" color="primary"> {/* Uses primary color from theme */}
+        <Toolbar>
+          {/* Logo or Brand Name */}
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: 'none',
+              color: 'inherit',
+              flexGrow: 1,
+              fontFamily: 'Poppins, sans-serif', // Ensures typography uses Poppins
+            }}
           >
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: 'flex',
-                alignItems: 'center',
-                ml: '-18px',
-                px: 0,
-              }}
-            >
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                <MenuItem
-                  component={Link}
-                  to="/"
-                >
-                  <p style={{fontFamily: "Poppins", color:'white', paddingLeft:'10px'}}>BobaShare</p>
-                </MenuItem>
-                {user && (
-                  <>
-                    <MenuItem
-                      component={Link}
-                      to="/EventsPage"
-                      sx={{ py: '6px', px: '12px' }}
-                    >
-                      {/* <Typography style={{color:'white'}} variant="body2" color="text.primary">
-                        All Events
-                      </Typography> */}
-                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>All Events</h4>
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/CreateEventPage"
-                      sx={{ py: '6px', px: '12px' }}
-                    >
-                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Create Event</h4>
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/ManageEventPage"
-                      sx={{ py: '6px', px: '12px' }}
-                    >
-                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>Manage Event</h4>
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to="/BobaVendorsPage"
-                      sx={{ py: '6px', px: '12px' }}
-                    >
-                      <h4 style={{fontFamily: "Poppins", color:'white', fontWeight: 'normal'}}>See Boba Vendors</h4>
-                    </MenuItem>
-                  </>
-                  )
-                }
-              </Box>
-            </Box>
-            {!user && (
-              <>
-                <Box
-                sx={{
-                  display: { xs: 'none', md: 'flex' },
-                  gap: 0.5,
-                  alignItems: 'center',
-                }}
-                >
-                  <Button
-                    color="custom"
-                    variant="outlined"
-                    href="/SignIn"
-                  >
-                    Sign in
-                  </Button>
-                  <Button
-                    color="custom"
-                    variant="outlined"
-                    href="/SignUp"
-                  >
-                    Sign up
-                  </Button>
-                </Box>
-              </>
-            )}
-            <Box sx={{ display: { sm: '', md: 'none' } }}>
-              <Button
-                variant="text"
-                color="primary"
+            BobaShare
+          </Typography>
+
+          {isMobile ? (
+            // Mobile View: Hamburger Menu
+            <>
+              <IconButton
+                edge="start"
+                color="inherit"
                 aria-label="menu"
-                onClick={toggleDrawer(true)}
-                sx={{ minWidth: '30px', p: '4px' }}
+                onClick={handleDrawerToggle}
               >
                 <MenuIcon />
-              </Button>
-            </Box>
-          </Toolbar>
-        </Container>
+              </IconButton>
+              <Drawer
+                anchor="right"
+                open={drawerOpen}
+                onClose={handleDrawerToggle}
+              >
+                {drawer}
+              </Drawer>
+            </>
+          ) : (
+            // Desktop View: Inline Links
+            user ? (
+              navLinks.map((item) => (
+                <Button
+                  key={item.title}
+                  color="inherit"
+                  component={Link}
+                  to={item.path}
+                  sx={{
+                    fontFamily: 'Poppins, sans-serif',
+                  }}
+                >
+                  {item.title}
+                </Button>
+              ))
+            ) : (
+              <>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/signin"
+                  sx={{
+                    fontFamily: 'Poppins, sans-serif',
+                  }}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/signup"
+                  sx={{
+                    fontFamily: 'Poppins, sans-serif',
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </>
+            )
+          )}
+        </Toolbar>
       </AppBar>
-      </ThemeProvider>
-    </div>
+    </Box>
   );
 }
-
-Navbar.propTypes = {
-  mode: PropTypes.oneOf(['dark', 'light']).isRequired,
-  toggleColorMode: PropTypes.func.isRequired,
-};
 
 export default Navbar;
