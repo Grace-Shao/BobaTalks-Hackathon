@@ -1,5 +1,4 @@
 import '../styles/style.css';
-import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import axios from 'axios';
 import { useState } from 'react';
@@ -51,7 +50,6 @@ export default function CreateEventPage() {
     return (
         <ThemeProvider theme={theme}>
         <div>
-            <Navbar />
             <Container
             className = "width-no-space"
                 sx={{

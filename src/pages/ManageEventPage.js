@@ -1,5 +1,4 @@
 import '../styles/style.css';
-import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import axios from 'axios';
 import { useContext, useState } from 'react';
@@ -80,7 +79,6 @@ export default function ManageEventPage() {
           minHeight: '100vh',
         }}
       >
-        <Navbar />
         <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
         Manage Events
         </Typography>

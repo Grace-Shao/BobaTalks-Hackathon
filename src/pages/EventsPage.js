@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import EventCard from "../components/EventCard";
-import Navbar from "../components/Navbar";
 import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -67,7 +66,6 @@ export default function EventsPage() {
           minHeight: '100vh',
         }}
       >
-        <Navbar />
         <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
         Upcoming Events
         </Typography>

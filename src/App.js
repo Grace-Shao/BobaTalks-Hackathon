@@ -1,24 +1,31 @@
 import "./App.css";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { AuthProvider } from "./context/AuthContext";
+
+import Home from "./pages/Home";
 import EventsPage from "./pages/EventsPage";
 import CreateEventPage from "./pages/CreateEventPage";
-import Home from "./pages/Home";
 import DonatePage from "./pages/DonatePage";
 import BobaVendorsPage from "./pages/BobaVendorsPage";
 import ManageEventPage from "./pages/ManageEventPage";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import EditEventPage from "./pages/EditEventsPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
-import EditEventPage from "./pages/EditEventsPage";
-import { ThemeProvider } from "@mui/material/styles";
+import Navbar from "./components/Navbar";
+
 import theme from "./theme";
+import { ThemeProvider } from "@mui/material/styles";
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <Router>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
