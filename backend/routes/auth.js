@@ -1,7 +1,7 @@
 import express from "express";
+import passport from "../config/passport.js";
 import User from '../models/User.js';
 import { body, validationResult } from 'express-validator';
-import passport from "../config/passport.js";
 
 const router = express.Router();
 
@@ -88,6 +88,27 @@ router.post(
       })
     })(req, res, next);
   });
+
+/**
+ * Googe Auth Route
+ */
+router.get(
+  '/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+)
+
+/**
+ * Googel Auth Callback Route
+ * 
+ */
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login', session: true }),
+  (req, res) => {
+    // on successful auth
+    return
+  }
+)
 
 /**
  * @route POST /api/auth/logout

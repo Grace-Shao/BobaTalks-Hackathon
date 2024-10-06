@@ -3,8 +3,6 @@ import cors from 'cors';
 import "./loadEnv.js"
 import "express-async-errors";
 import indexRouter from './routes/index.js'
-import eventsRouter from './routes/events.js'
-import authRouter from './routes/auth.js'
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -46,8 +44,6 @@ import './db/conn.js';
 import './config/passport.js';
 
 app.use('/api', indexRouter)
-app.use('/api/events', eventsRouter)
-app.use('/api/auth', authRouter)
 
 // Global error handling
 app.use((err, _req, res, next) => {
