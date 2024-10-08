@@ -11,9 +11,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
-const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
-  const [formValues, setFormValues] = useState(initialFormValues);
-  console.log(formValues)
+const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }) => {
+  const [formValues, setFormValues] = useState({
+    ...initialFormValues,
+    startDate: dayjs(),
+    endDate: dayjs()
+  });
 
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
@@ -26,16 +29,16 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
     'c@gmail.com'
   ]
 
-  const handleChange = (field, value) => {
+  const handleChange = (field, e, value) => {
     console.log("handle change")
-    console.log({field, value})
+    console.log(field, e)
 
     if (field === 'startDate' || field === 'endDate') {
-      setFormValues((prev) => ({ ...prev, [field]: value }));
+      setFormValues((prev) => ({ ...prev, [field]: e }));
     } else if (field === 'organizers') {
       setFormValues((prev) => ({ ...prev, organizers: value }));
     } else {
-      setFormValues((prev) => ({ ...prev, [field]: value }));
+      setFormValues((prev) => ({ ...prev, [field]: e.target.value }));
     }
 
     // Clear specific field error when user starts typing/selecting
@@ -100,17 +103,17 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
   };
 
   const handleSubmit = (e) => {
-    console.log("submited")
     e.preventDefault();
     setSubmitError('');
     setSubmitSuccess('');
 
     if (validate()) {
       // Handle form submission logic here
-      console.log('Form Submitted:', formValues);
 
       // Simulate successful submission
       setSubmitSuccess('Donation event created successfully!');
+
+      submitCallback(formValues);
 
       // Clear errors
       setErrors({});
@@ -148,7 +151,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               fullWidth
               required
               value={formValues.eventName}
-              onChange={e => handleChange('eventName', e.targetvalue)}
+              onChange={e => handleChange('eventName', e)}
               error={Boolean(errors.eventName)}
               helperText={errors.eventName}
             />
@@ -163,7 +166,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               fullWidth
               required
               value={formValues.currentMoney}
-              onChange={e => handleChange('currentMoney', e.target.value)}
+              onChange={e => handleChange('currentMoney', e)}
               inputProps={{ min: 0 }}
               error={Boolean(errors.currentMoney)}
               helperText={errors.currentMoney}
@@ -177,7 +180,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               fullWidth
               required
               value={formValues.goalAmount}
-              onChange={e => handleChange('goalAmount', e.target.value)}
+              onChange={e => handleChange('goalAmount', e)}
               inputProps={{ min: 0 }}
               error={Boolean(errors.goalAmount)}
               helperText={errors.goalAmount}
@@ -191,7 +194,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               options={allOrganizerEmails}
               getOptionLabel={(option) => option}
               value={formValues.organizers}
-              onChange={e => handleChange('organizers', e.target.value)}
+              onChange={(e, value) => handleChange('organizers', e, value)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -215,7 +218,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               rows={4}
               fullWidth
               value={formValues.description}
-              onChange={e => handleChange('description', e.target.value)}
+              onChange={e => handleChange('description', e)}
             />
           </Grid>
 
@@ -224,8 +227,8 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
             <DatePicker
               label="Start Date"
               value={formValues.startDate}
-              onChange={e => handleChange('startDate', e.target.value)}
-              defaultValue={dayjs()}
+              onChange={e => handleChange('startDate', e)}
+              defaultValue={formValues.startDate}
               disablePast
 
             />
@@ -234,8 +237,8 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
             <DatePicker
               label="End Date"
               value={formValues.endDate}
-              onChange={e => handleChange('endDate', e.target.value)}
-              defaultValue={dayjs()}
+              onChange={e => handleChange('endDate', e)}
+              defaultValue={formValues.endDate}
               minDate={formValues.startDate}
               disablePast
             />
@@ -249,7 +252,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail }) => {
               type="url"
               fullWidth
               value={formValues.imageUrl}
-              onChange={e => handleChange('imageUrl', e.target.value)}
+              onChange={e => handleChange('imageUrl', e)}
               error={Boolean(errors.imageUrl)}
               helperText={errors.imageUrl}
             />

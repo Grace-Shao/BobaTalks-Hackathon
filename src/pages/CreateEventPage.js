@@ -1,17 +1,5 @@
-import '../styles/style.css';
-import Container from '@mui/material/Container';
-import axios from 'axios';
-import { useState } from 'react';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Button from '@mui/material/Button';
-
 import CreateEventForm from '../components/EventForm';
-
+import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 export default function CreateEventPage() {
@@ -22,19 +10,34 @@ export default function CreateEventPage() {
         return <div>Loading...</div>
     }
 
+    const submitCallback = async (formValues) => {
+        try {
+            let response = await axios.post(
+                `${process.env.REACT_APP_API_ENDPOINT}/api/events/`, 
+                {
+                    ...formValues,
+                    currentMoney: Number(formValues.currentMoney),
+                    goalAmount: Number(formValues.goalAmount),
+                })
+
+            console.log('Event updated:', response.data);
+            alert('Event successfully created!');
+        } catch (error) {
+            console.error('Failed to create event:', error);
+        }
+    }
+
     let initialFormValues = {
         currentMoney: '',
         goalAmount: '',
         eventName: '',
         organizers: [ user.email ], // Auto-add current user's email
         description: '',
-        startDate: null,
-        endDate: null,
         imageUrl: '',
     }
 
 
     return (
-        <CreateEventForm initialFormValues={initialFormValues} currentUserEmail={user.email} />
+        <CreateEventForm initialFormValues={initialFormValues} currentUserEmail={user.email} submitCallback={submitCallback}/>
     )
   }

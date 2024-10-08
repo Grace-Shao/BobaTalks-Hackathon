@@ -12,16 +12,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     
     async function fetchUser() {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`, 
-        { withCredentials: true });
-      
-        console.log({ 'fetchUser response': response})
-      if (response.status === 200) {
-        let userData =  response.data.user;
-        setUser(userData)
-        setLoading(false);
-      } else {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`, 
+          { withCredentials: true });
+        
+        console.log(response)
+
+        if (response.status === 200) {
+          let userData =  response.data.user;
+          setUser(userData)
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log('No User Found:', error.response ? error.response.data : error.message);
         setUser(null);
         setLoading(false);
       }
