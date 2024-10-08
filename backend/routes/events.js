@@ -96,7 +96,7 @@ router.get("/:id", isAuthenticated, async (req, res) => {
 /**
  * Adds a new document to the collection
  */
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
   const {
     currentMoney,
     goalAmount,
@@ -143,12 +143,12 @@ router.post("/", async (req, res) => {
 /**
  * Edit an existing event
  */
-router.put("/:id", async (req, res) => {
+router.put("/:id", isAuthenticated, async (req, res) => {
   const eventId = req.params.id;
-  const updatableFields = [
-    'goal_amount', 'event_name', 'event_owner', 'event_description', 
-    'end_date', 'start_date', 'img_url'
-  ];
+
+  const updatableFields = Object.keys(Event.schema.paths).filter((field) => {
+    return !['_id', '__v', 'donations', 'currentMoney'].includes(field);
+  });
 
   try {
     const event = await Event.findById(eventId);
@@ -183,24 +183,34 @@ router.put("/:id", async (req, res) => {
 /**
  * Donate to an existing event
  */
-router.put("/donate/:id", async (req, res) => {
+router.put("/donate/:id", isAuthenticated, async (req, res) => {
+  const user = req.user;
+
   const eventId = req.params.id;
-  const { donation_amount, thank_you_note } = req.body;
+  let { donation } = req.body;
+
+  if (!donation) {
+    return res.status(400).send({ error: "Donation is empty" });
+  }
 
   try {
+    donation = {
+      ...donation,
+      userId: user._id,
+    }
+
     const originalEvent = await Event.findById(eventId);
     if (!originalEvent) {
-      return res.status(404).send({ error: "Event to edit not found" });
+      return res.status(404).send({ error: "Event to donate to not found" });
     }
 
     // Update fields (only if they are provided and valid)
-    if (donation_amount !== undefined)
-      originalEvent.current_money += donation_amount;
-
-    // Add new notes to event
-    if (thank_you_note) {
-      originalEvent.thank_you_note.push(thank_you_note);
+    if (donation.amount == undefined) {
+      return res.status(400).send({ error: "Donation amount is required" });
     }
+
+    originalEvent.currentMoney += donation.amount;
+    originalEvent.donations.push(donation);
 
     // Save the updates
     const result = await originalEvent.save();
