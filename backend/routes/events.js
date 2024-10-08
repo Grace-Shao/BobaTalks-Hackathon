@@ -42,11 +42,19 @@ router.get("/user", isAuthenticated,  async (req, res) => {
 
     if (!user) return res.status(404).send("User not found");
 
-    const events = await Event.find({ organizerIds: user._id });
+    const events = await Event.find({ organizerIds: user._id }).lean();
      
     if (!events) return res.status(404).send("No events found.");
 
-    res.status(200).send(events);
+    const updatedEvents = await Promise.all(events.map(async (event) => {
+      // get organizers
+      let organizers = await User.find({ _id: { $in: event.organizerIds } }, 'email');
+      // map organizers to get their emails
+      event.organizers = organizers.map(user => user.email);
+      return event;
+    }));
+
+    res.status(200).send(updatedEvents);
   } catch (err) {
     console.error(err);
     return res.status(500).send("Route encountered an error.");
