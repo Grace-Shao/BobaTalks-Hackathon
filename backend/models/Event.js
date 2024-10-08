@@ -1,42 +1,38 @@
 import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema({
-  event_name: {
+  eventName: {
     type: String,
     required: true,
     trim: true,
   },
-  event_description: {
+  eventDescription: {
     type: String,
     trim: true
   },
-  img_url: {
+  imageUrl: {
     type: String,
     trim: true,
   },
-  end_date: {
+  endDate: {
     type: Date,
     required: true,
   },
-  start_date: {
+  startDate: {
     type: Date,
     required: true,
   },
-  current_money: {
+  currentMoney: {
     type: Number,
     min: 0,
     default: 0,
   },
-  goal_amount: {
+  goalAmount: {
     type: Number,
     required: true,
     min: 1,
   },
-  event_owner: {
-    type: String,
-    required: true,
-  },
-  organizer_ids: [
+  organizerIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

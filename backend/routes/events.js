@@ -1,5 +1,6 @@
 import express from "express";
 import Event from "../models/Event.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -96,29 +97,34 @@ router.get("/:id", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   const {
-    goal_amount,
-    event_name,
-    event_owner,
-    end_date,
-    event_description,
-    start_date,
-    img_url,
+    currentMoney,
+    goalAmount,
+    eventName,
+    organizers,
+    endDate,
+    description,
+    startDate,
+    imageUrl,
   } = req.body;
 
-  // Create a new event instance using Mongoose
-  const newEvent = new Event({
-    current_money: 0,
-    goal_amount,
-    event_name,
-    event_owner,
-    event_description,
-    end_date: new Date(end_date),
-    start_date: new Date(start_date),
-    thank_you_note: [],
-    img_url,
-  });
+  // get users
+  const users = await User.find({ email: { $in: organizers }}, '_id');
+  const organizerIds = users.map(user => user._id);
 
   try {
+    // Create a new event instance using Mongoose
+    const newEvent = new Event({
+      currentMoney,
+      goalAmount,
+      eventName,
+      organizerIds,
+      description,
+      endDate: new Date(endDate),
+      startDate: new Date(startDate),
+      donations: [],
+      imageUrl,
+    });
+
     // Save the new event to the database
     const result = await newEvent.save();
     res.status(201).send(result);
@@ -209,29 +215,6 @@ router.put("/donate/:id", async (req, res) => {
         .status(500)
         .send({ error: "Update failed due to internal server error." });
     }
-  }
-});
-
-/**
- * Delete an event
- */
-router.delete("/:id", async (req, res) => {
-  try {
-    console.log("start")
-    // Find the document by ID and delete it in one operation
-    const result = await Event.findByIdAndDelete(req.params.id);
-    console.log(result)
-    // Check if an event was actually found and deleted
-    if (!result) {
-      return res.status(404).send({ message: "Event not found." });
-    }
-
-    res.status(200).send({ message: "Event deleted successfully." });
-  } catch (error) {
-    console.error("Failed to delete event:", error);
-    res.status(500).send({
-      message: "Failed to delete event due to internal server error.",
-    });
   }
 });
 
