@@ -17,8 +17,8 @@ router.get("/", async (req, res) => {
         $match: {
           $expr: {
             $and: [
-              { $lt: ["$current_money", "$goal_amount"] },
-              { $gte: ["$end_date", today] },
+              { $lt: ["$currentMoney", "$goalAmount"] },
+              { $gte: ["$endDate", today] },
             ],
           },
         },
@@ -35,13 +35,22 @@ router.get("/", async (req, res) => {
 /**
  * Fetches all events that the user has created
  */
-router.get("/user/:username", async (req, res) => {
+router.get("/user", async (req, res) => {
   try {
-    const results = await Event.find({ event_owner: req.params.username });
+    const userEmail = req.query.user;
 
-    if (!results) return res.status(404).send("No events found.");
+    if (!userEmail) {
+      return res.status(404).send("Please input a user email.");
+    }
 
-    res.status(200).send(results);
+    const user = await User.findOne({ email: userEmail }).select('_id');
+    if (!user) return res.status(404).send("User not found");
+
+    const events = await Event.find({ organizerIds: user._id });
+     
+    if (!events) return res.status(404).send("No events found.");
+
+    res.status(200).send(events);
   } catch (err) {
     console.error(err);
     return res.status(500).send("Route encountered an error.");
