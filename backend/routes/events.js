@@ -1,13 +1,14 @@
 import express from "express";
 import Event from "../models/Event.js";
 import User from "../models/User.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
 
 /**
  * Fetches all events that the user should be able to see
  */
-router.get("/", async (req, res) => {
+router.get("/", isAuthenticated, async (req, res) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -35,15 +36,10 @@ router.get("/", async (req, res) => {
 /**
  * Fetches all events that the user has created
  */
-router.get("/user", async (req, res) => {
+router.get("/user", isAuthenticated,  async (req, res) => {
   try {
-    const userEmail = req.query.user;
+    const user = req.user;
 
-    if (!userEmail) {
-      return res.status(404).send("Please input a user email.");
-    }
-
-    const user = await User.findOne({ email: userEmail }).select('_id');
     if (!user) return res.status(404).send("User not found");
 
     const events = await Event.find({ organizerIds: user._id });
@@ -60,12 +56,8 @@ router.get("/user", async (req, res) => {
 /**
  * Get a single event by ID
  */
-router.get("/:id", async (req, res) => {
-  const { username } = req.query;
-
-  if (!username) {
-    return res.status(404).send("Please input a username.");
-  }
+router.get("/:id", isAuthenticated, async (req, res) => {
+  const user = req.user;
 
   try {
     const result = await Event.findById(req.params.id); // Mongoose simplifies finding by ID
@@ -76,15 +68,15 @@ router.get("/:id", async (req, res) => {
 
     let today = new Date();
     today.setHours(0, 0, 0, 0);
-    let endDate = new Date(result.end_date);
-    let owner = result.event_owner;
+    let endDate = new Date(result.endDate);
+    let organizerIds = result.organizerIds;
 
-    if (owner !== username) {
+    if (organizerIds.includes(user._id)) {
       if (endDate < today) {
         return res.status(404).send("The event has passed!");
       } else {
-        let currAmt = result.current_money;
-        let targetAmt = result.goal_amount;
+        let currAmt = result.currentMoney;
+        let targetAmt = result.goalAmount;
 
         if (currAmt >= targetAmt) {
           return res.status(404).send("The target amount has been reached!");
@@ -93,7 +85,7 @@ router.get("/:id", async (req, res) => {
         }
       }
     } else {
-      return res.status(200).send(result);
+      return res.status(404).send("Not found");
     }
   } catch (err) {
     console.error(err);

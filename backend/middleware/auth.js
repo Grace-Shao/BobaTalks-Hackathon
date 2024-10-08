@@ -2,7 +2,7 @@ export function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.status(401).json({ msg: 'Unauthorized' });
+  res.status(401).json({ msg: 'Unauthorized request. Please log in.' });
 }
 
 export function authorizeRoles(...roles) {
