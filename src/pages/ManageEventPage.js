@@ -13,26 +13,25 @@ export default function ManageEventPage() {
 
   const [events, setEvents] = useState([]);
 
-  const getEvents = () => {
-    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events/user/${user.email}`)
-      .then(response => {
-        let events = []
+  const getEvents = async () => {
+    try {
+      let response = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/events/user/`,
+        { withCredentials: true }
+      );
+    
+      let events = response.data.map(event => ({
+        ...event,
+        endDate: new Date(event.endDate),
+        startDate: new Date(event.startDate)
+      }));
 
-        for (let event of response.data) {
-          let newEvent = {
-            ...event,
-            end_date: new Date(event.end_date),
-            start_date: new Date(event.start_date)
-          }
-
-          events.push(newEvent)
-        }
-
-        setEvents(events);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      console.log(events)
+    
+      setEvents(events);
+    } catch (error) {
+      console.error(error);
+    }    
   }
 
   useEffect(() => {

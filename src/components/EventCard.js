@@ -8,15 +8,15 @@ import axios from 'axios';
 
 export default function EventCard({event, manageEventView, deleteEvent}) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const progress = (event.current_money / event.goal_amount) * 100;
+    const progress = (event.currentMoney / event.goalAmount) * 100;
 
     return (
         <div className='card'>
         <div className="column">
             <h1>{event.event_name}</h1>
-            <p><i>Organized by: {event.event_owner}</i></p>
+            <p><i>Organized by: {event.organizers}</i></p>
             <p>{event.event_description}</p>
-            <Tooltip title={`Current Money: ${event.current_money}, Goal: ${event.goal_amount}`}>
+            <Tooltip title={`Current Money: ${event.currentMoney}, Goal: ${event.goal_amount}`}>
                 <LinearProgress variant="determinate" value={progress}
                 sx={{ 
                 height: '20px', 
@@ -31,13 +31,14 @@ export default function EventCard({event, manageEventView, deleteEvent}) {
         </div>
 
         <div className="column">
-            <p style={{ marginLeft: "10vw"}}>Ending on {event.end_date.toISOString().substring(0, 10)}</p>
-            {event.img_url ? (
+            <p style={{ marginLeft: "10vw"}}>Ending on {event.endDate.toISOString().substring(0, 10)}</p>
+            {event.imageUrl ? (
             <img
-                src={event.img_url}
+                src={event.imageUrl}
                 height="150px"
                 width="250px"
                 style={{ marginLeft: "10vw", objectFit: 'cover', borderRadius: '10px'}}
+                alt="Event Image"
             />
             ) : null} 
             {!manageEventView && (
