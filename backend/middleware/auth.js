@@ -1,4 +1,9 @@
 export function isAuthenticated(req, res, next) {
+  console.log('isAuthenticated middleware called');
+  console.log('Session ID:', req.sessionID);
+  console.log('Is Authenticated:', req.isAuthenticated());
+  console.log('User:', req.user);
+
   if (req.isAuthenticated()) {
     return next();
   }

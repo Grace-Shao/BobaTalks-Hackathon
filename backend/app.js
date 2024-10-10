@@ -17,20 +17,22 @@ app.use(cors({
 
 // Middleware
 // allow express to parse json bodies in requests
-app.use(express.json()); 
+app.use(express.json());
 app.use(cookieParser());
 
 const sessionsStore = MongoStore.create({
   client: mongoose.connection.getClient(),
   dbName: 'boba_server',
   collectionName: 'sessions',
+  ttl: 14 * 24 * 60 * 60, // 14 days
+  autoRemove: 'native',
 });
 
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'session_secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: sessionsStore,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
@@ -45,6 +47,14 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  console.log('Debug Middleware');
+  console.log('Session:', req.session);
+  console.log('User:', req.user);
+  console.log('Is Authenticated:', req.isAuthenticated());
+  next();
+});
+
 // Conenct to MongoDB
 import './db/conn.js';
 
@@ -55,7 +65,12 @@ app.use('/api', indexRouter)
 
 // Global error handling
 app.use((err, _req, res, next) => {
-  res.status(500).send("Uh oh! An unexpected error occured.")
+  console.log(err.stack);
+  res.status(500).send(
+    process.env.NODE_ENV === 'production'
+      ? "Uh oh! An unexpected error occurred."
+      : err.message
+  );
 })
 
 // start server

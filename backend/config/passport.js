@@ -80,15 +80,23 @@ passport.use(
 
 // Serialize user
 passport.serializeUser((user, done) => {
+  console.log('Serializing user:', user.id);
   done(null, user.id);
 });
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
   try {
+    console.log('Deserializing user:', id);
     const user = await User.findById(id);
+    if (!user) {
+      console.log('User not found during deserialization');
+      return done(null, false);
+    }
+    console.log('User deserialized successfully:', user.email);
     done(null, user);
   } catch (error) {
+    console.error('Error during deserialization:', error);
     done(error, null);
   }
 });

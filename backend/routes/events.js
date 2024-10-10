@@ -25,7 +25,7 @@ router.get("/", isAuthenticated, async (req, res) => {
         },
       },
     ]);
-    
+
     res.status(200).send(results);
   } catch (err) {
     console.error("Error fetching events:", err);
@@ -36,14 +36,14 @@ router.get("/", isAuthenticated, async (req, res) => {
 /**
  * Fetches all events that the user has created
  */
-router.get("/user", isAuthenticated,  async (req, res) => {
+router.get("/user", isAuthenticated, async (req, res) => {
   try {
     const user = req.user;
 
     if (!user) return res.status(404).send("User not found");
 
     const events = await Event.find({ organizerIds: user._id }).lean();
-     
+
     if (!events) return res.status(404).send("No events found.");
 
     const updatedEvents = await Promise.all(events.map(async (event) => {
@@ -68,18 +68,22 @@ router.get("/:id", isAuthenticated, async (req, res) => {
   const user = req.user;
 
   try {
-    const result = await Event.findById(req.params.id); // Mongoose simplifies finding by ID
+    let result = await Event.findById(req.params.id).lean(); // Mongoose simplifies finding by ID
 
     if (!result) {
       return res.status(404).send("Not found");
     }
 
+    console.log(result);
+
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     let endDate = new Date(result.endDate);
-    let organizerIds = result.organizerIds;
+    let organizerIds = result.organizerIds.map(id => id.toString());
 
-    if (organizerIds.includes(user._id)) {
+    const userIdString = user._id.toString();
+
+    if (organizerIds.includes(userIdString)) {
       if (endDate < today) {
         return res.status(404).send("The event has passed!");
       } else {
@@ -89,6 +93,10 @@ router.get("/:id", isAuthenticated, async (req, res) => {
         if (currAmt >= targetAmt) {
           return res.status(404).send("The target amount has been reached!");
         } else {
+          let organizers = await User.find({ _id: { $in: organizerIds } }, 'email');
+          // map organizers to get their emails
+          organizers = organizers.map(user => user.email);
+          result.organizers = organizers;
           return res.status(200).send(result);
         }
       }
@@ -117,7 +125,7 @@ router.post("/", isAuthenticated, async (req, res) => {
   } = req.body;
 
   // get users
-  const users = await User.find({ email: { $in: organizers }}, '_id');
+  const users = await User.find({ email: { $in: organizers } }, '_id');
   const organizerIds = users.map(user => user._id);
 
   try {
@@ -170,7 +178,7 @@ router.put("/:id", isAuthenticated, async (req, res) => {
         event[key] = req.body[key];
       }
     });
-    
+
     // Validate the updated document before saving
     await event.validate();
 

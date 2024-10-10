@@ -140,7 +140,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }
         autoComplete="off"
       >
         <Typography variant="h5" align="center" gutterBottom>
-          Create Donation Event
+          {initialFormValues.eventName ? 'Edit Event Details' : 'Create Donation Event'}
         </Typography>
         <Grid container spacing={2}>
           {/* Event Name */}
@@ -266,7 +266,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }
               color="primary"
               fullWidth
             >
-              Create Event
+              {initialFormValues.eventName ? 'Save Changes' : 'Create Event'}
             </Button>
           </Grid>
         </Grid>
