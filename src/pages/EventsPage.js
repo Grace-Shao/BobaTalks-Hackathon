@@ -4,54 +4,36 @@ import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import '../styles/Card.css'
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const theme = createTheme({
-  palette: {
-    custom: {
-      main: '#FFFFFF',
-      light: '#FFFFFF',
-      dark: '#FFFFFF',
-      contrastText: '#FFFFFF',
-    },
-  },
-});
 
 export default function EventsPage() {
   const [events, setEvents] = useState([]); 
+  
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/events`)
-      .then(response => {
-        let events = []
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/events`,
+          { withCredentials: true }
+        );
 
-        for (let event of response.data) {
-          let newEvent = {
-            ...event,
-            end_date: new Date(event.end_date),
-            start_date: new Date(event.start_date)
-          }
-
-          events.push(newEvent)
-        }
+        const events = response.data.map(event => ({
+          ...event,
+          endDate: new Date(event.endDate),
+          startDate: new Date(event.startDate)
+        }));
 
         setEvents(events);
-      })
-      .catch(error => {
+      } catch (error) {
         console.log(error);
-      });
-    }, []);
+      }
+    };
+
+    fetchEvents();
+  }, []);
     
     return (
-    <ThemeProvider theme={theme}>
-          {/* <AppBar
-            position="fixed"
-            sx={{
-              boxShadow: 0,
-              bgcolor: 'transparent',
-              backgroundImage: 'none',
-              mt: 2,
-            }}
-          ></AppBar> */}
+      <>
       <Container
         className = "width-no-space"
         sx={{
@@ -73,6 +55,6 @@ export default function EventsPage() {
           ) : <h3>No events found</h3>
         }
       </Container>
-      </ThemeProvider>
+      </>
     );
   }

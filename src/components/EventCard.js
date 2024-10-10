@@ -4,19 +4,17 @@ import '../styles/Card.css'
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 import Tooltip from '@mui/material/Tooltip';
-import axios from 'axios';
 
 export default function EventCard({event, manageEventView, deleteEvent}) {
-    const [isExpanded, setIsExpanded] = useState(false);
     const progress = (event.currentMoney / event.goalAmount) * 100;
 
     return (
         <div className='card'>
         <div className="column">
-            <h1>{event.event_name}</h1>
+            <h1>{event.eventName}</h1>
             <p><i>Organized by: {event.organizers}</i></p>
-            <p>{event.event_description}</p>
-            <Tooltip title={`Current Money: ${event.currentMoney}, Goal: ${event.goal_amount}`}>
+            <p>{event.eventDescription}</p>
+            <Tooltip title={`Current Money: ${event.currentMoney}, Goal: ${event.goalAmount}`}>
                 <LinearProgress variant="determinate" value={progress}
                 sx={{ 
                 height: '20px', 
