@@ -1,13 +1,11 @@
 import * as React from 'react';
-import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 
-
+// landing page
 export default function Home() {
   return (
     <div>
-      <Navbar/>
-      <Hero/>
+       <Hero/>
     </div>
   );
 }

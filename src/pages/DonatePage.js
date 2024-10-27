@@ -1,57 +1,97 @@
 // import '../styles/CreateEventPage.css';
-import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import axios from 'axios';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import { ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {
-    ApplePay,
-    GooglePay, 
-    CreditCard,
-    PaymentForm
-} from "react-square-web-payments-sdk";
 
-const theme = createTheme({
-    palette: {
-      custom: {
-        main: '#021944',
-        light: '#021944',
-        dark: '#021944',
-        contrastText: '#021944',
-      },
-    },
-});
+import {
+    PaymentForm,
+    CreditCard
+} from 'react-square-web-payments-sdk';
+
+import theme from '../theme';
 
 export default function DonatePage() {
     const { id } = useParams();
-    const [donationAmount, setDonationAmount] = useState(null);
+    const [donationAmount, setDonationAmount] = useState(7);
+    const [anonymous, setAnonymous] = useState(false);
     const [thankYouNote, setThankYouNote] = useState('');
-    // const [post, setPost] = useState({eventName: '', eventDescription: '', goalAmount: ''})
-    // const numberFields = ['goal_amount']; // add any other number fields here
-    
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [donateAmountError, setDonateAmountError] = useState('');
+    const [paymentError, setPaymentError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
     const handleDonation = (amount) => {
-        setDonationAmount(amount);
+        setDonateAmountError('');
+        const numAmount = Number(amount);
+        if (isNaN(numAmount)) {
+            setDonateAmountError('Invalid donation amount');
+            return;
+        }
+        if (numAmount <= 0) {
+            setDonateAmountError('Donation amount must be greater than 0');
+            return;
+        }
+        setDonationAmount(Math.round(numAmount * 100) / 100);
+        return;
     }
-    // only donation and thank you note is added to the backend
-    const submitDonation = async (event) => {
-        event.preventDefault();
-        const data = {
-            "donation_amount": donationAmount,
-            "thank_you_note": thankYouNote
+
+    const cardTokenizeResponseReceived = async (token, buyer) => {
+        await handlePaymentSubmit(token);
+    };
+
+    const createPaymentRequest = () => {
+        return {
+            countryCode: "CA",
+            currencyCode: "CAD",
+            total: {
+                amount: (donationAmount || 0),
+                label: "Total",
+            },
         };
-    
+    };
+
+
+    // Update submitDonation for Square
+    const handlePaymentSubmit = async (token) => {
+        setIsProcessing(true);
+        setPaymentError(null);
+
         try {
-            await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
+            const data = {
+                sourceId: token.token,
+                donation_amount: donationAmount,
+                thank_you_note: thankYouNote,
+                anonymous: anonymous,
+            };
+
+            await axios.put(
+                `${process.env.REACT_APP_API_ENDPOINT}/api/events/donate/${id}`,
+                data,
+                {
+                    withCredentials: true
+                }
+            );
+
+            // redirect to all events page
+            setSuccess(true);
+            setDonationAmount(7);
+            setThankYouNote('');
             console.log('Donation submitted');
-            alert('Thank you for the donation!');
         } catch (error) {
-            console.error(error);
+            setPaymentError('Payment failed. Please try again.');
+            console.error('Error:', error);
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -59,121 +99,234 @@ export default function DonatePage() {
     const handleChange = (event) => {
         setThankYouNote(event.target.value);
     }
+
     return (
         <ThemeProvider theme={theme}>
-        <div>
-            <Navbar />
-            <Container
-            className = "width-no-space"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    pt: { xs: 14, sm: 20 },
-                    pb: { xs: 8, sm: 12 },
-                    backgroundColor: '#D3E9FF',
-                    minHeight: '100px'
-                }}
-            >
-                <h1>Give the gift of Boba!</h1>
-                <form onSubmit={submitDonation}>
-                <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 900}} 
-        id="sender_name" name="sender_name" onChange={handleChange} label="Your Name (optional)" variant="outlined" />
-                 <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 900}} 
-        id="sender_email" name="sender_email" onChange={handleChange} label="Your Email" variant="outlined" />
 
-                    {/* <label htmlFor="payment_method">Payment Method:</label>
-                    <input type="text" id="payment_method" name="payment_method" onChange={handleChange} /> */}
+            {isProcessing && (
+                <CircularProgress
+                    sx={{
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 1000
+                    }}
+                />
+            )}
 
-                    <label htmlFor="donation_amount">Donation Amount:</label>
-                    <div>
-                    <Button
-                className="buttonDonate"
-                onClick={() => handleDonation(1)}
-                color="custom"
-                variant="outlined" 
-              >
-                <p>Give a Boba!</p>
-              </Button>
-                <Button
-                className="buttonDonate"
-                onClick={() => handleDonation(1)}
-                color="custom"
-                variant="outlined" 
-              >
-                $1
-              </Button>
-              <Button
-              className="buttonDonate"
-                onClick={() => handleDonation(5)}
-                color="custom"
-                variant="outlined" 
-              >
-                $5
-              </Button>
-              <Button
-              className="buttonDonate"
-                    onClick={() => handleDonation(10)}
-
-                color="custom"
-                variant="outlined" 
-              >
-                $10
-              </Button>
-              <input
-              className="donateCustom"
-                    onChange={(e) => handleDonation(Number(e.target.value))}
-                    placeholder='CUSTOM'
-                color="custom"
-                variant="outlined" 
-              >
-              </input>
-                    </div>
-
-                <TextField sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 900}} 
-        id="thank_you_note" name="thank_you_note" onChange={handleChange} label="Thank You Note (optional):" variant="outlined" />
-
-                    <PaymentForm
-                        applicationId="sandbox-sq0idb-yMiA_9_FWwmrR72EsRDZ3A"
-                        cardTokenizeResponseReceived={async (token, verifiedBuyer) => {
-                            console.log(token)
-                            console.log(verifiedBuyer)
-                        }}
-                        createPaymentRequest={() => ({
-                            countryCode: "US",
-                            currencyCode: "USD",
-                            total: {
-                                amount: "1.00",
-                                label: "Total",
-                            },
-                        })}
-                        locationId="LTH8JVJVKBYEG"
+            <Container maxWidth="sm" sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                pt: { xs: 4, sm: 6 },
+                pb: { xs: 4, sm: 6 },
+                minHeight: '100vh',
+                gap: 2,
+                opacity: isProcessing ? 0.5 : 1,
+                pointerEvents: isProcessing ? 'none' : 'auto',
+                position: 'relative'
+            }}>
+                {success && (
+                    <Alert
+                        severity="success"
+                        sx={{ width: '100%', mb: 3 }}
+                        onClose={() => setSuccess(false)}
                     >
-                        <ApplePay />
-                        <GooglePay />
-                        <CreditCard
-                        buttonProps={{
-                            css: {
-                            backgroundColor: "#771520",
-                            fontSize: "14px",
-                            color: "#fff",
-                            "&:hover": {
-                                backgroundColor: "#530f16",
-                            },
-                            },
-                        }}
-                        />
-                    </PaymentForm>
+                        Thank you for your donation!
+                    </Alert>
+                )}
 
-    <FormControlLabel sx={{mt: 5, width: 900}}control={<Checkbox />} label="I hereby confirm that all details entered are true as per my knowledge and BobaShare cannot be held responsible in case of any incorrect transactions incurred due to incorrect or falsified information " />
-    <Button type="onSubmit" style={{
-        backgroundColor: "#EDAB6F",
-        width: '100px',
-        marginTop: '5px'
-    }} variant="contained" >Donate</Button>
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    align="center"
+                    sx={{
+                        fontWeight: 'bold',
+                        fontSize: { xs: '1.75rem', sm: '2.125rem' }
+                    }}
+                >
+                    Give the gift of Boba!
+                </Typography>
+
+                <Typography
+                    variant="subtitle1"
+                    gutterBottom
+                    align="center"
+                    sx={{
+                        color: 'text.secondary',
+                        fontSize: { xs: '1rem', sm: '1.1rem' }
+                    }}
+                >
+                    Enter your donation amount.
+                </Typography>
+
+                <Typography
+                    variant="subtitle2"
+                    gutterBottom
+                    align="center"
+                    sx={{
+                        mb: 4,
+                        color: 'text.secondary',
+                        fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                    }}
+                >
+                    All donation amounts are in CAD.
+                </Typography>
+
+                <form style={{ width: '100%' }}>
+                    <Grid container spacing={2} sx={{ mb: { ms: 3, sm: 4 } }}>
+                        <Grid item xs={6} sm={6}>
+                            <Button
+                                fullWidth
+                                variant={donationAmount === 7 ? "contained" : "outlined"}
+                                color="primary"
+                                onClick={() => handleDonation(7)}
+                                sx={{ height: '60px' }}
+                            >
+                                Give a boba ($7)
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6} sm={6}>
+                            <Button
+                                fullWidth
+                                variant={donationAmount === 1 ? "contained" : "outlined"}
+                                color="primary"
+                                onClick={() => handleDonation(1)}
+                                sx={{ height: '60px' }}
+                            >
+                                $1
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6} sm={6}>
+                            <Button
+                                fullWidth
+                                variant={donationAmount === 5 ? "contained" : "outlined"}
+                                color="primary"
+                                onClick={() => handleDonation(5)}
+                                sx={{ height: '60px' }}
+                            >
+                                $5
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6} sm={6}>
+                            <Button
+                                fullWidth
+                                variant={donationAmount === 10 ? "contained" : "outlined"}
+                                color="primary"
+                                onClick={() => handleDonation(10)}
+                                sx={{ height: '60px' }}
+                            >
+                                $10
+                            </Button>
+                        </Grid>
+                    </Grid>
+
+                    <Typography
+                        variant="body1"
+                        align="center"
+                        sx={{
+                            mt: 4,
+                            mb: 4,
+                            position: 'relative',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                left: 0,
+                                top: '50%',
+                                width: '30%',
+                                height: '1px',
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)'
+                            },
+                            '&::after': {
+                                content: '""',
+                                position: 'absolute',
+                                right: 0,
+                                top: '50%',
+                                width: '30%',
+                                height: '1px',
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)'
+                            }
+                        }}
+                    >
+                        Or enter an amount
+                    </Typography>
+
+                    <TextField
+                        fullWidth
+                        label="Enter amount"
+                        type="number"
+                        value={donationAmount || ""}
+                        InputProps={{
+                            startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>,
+                        }}
+                        onChange={(e) => handleDonation(Number(e.target.value))}
+                        sx={{ mb: 4 }}
+                        inputProps={{
+                            min: 0,
+                            step: "0.01"
+                        }}
+                        error={!!donateAmountError}
+                        helperText={donateAmountError}
+                    />
+
+                    <TextField
+                        fullWidth
+                        label="Thank You Note (Optional)"
+                        multiline
+                        rows={4}
+                        value={thankYouNote}
+                        onChange={(e) => setThankYouNote(e.target.value)}
+                        sx={{ mb: 4 }}
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={anonymous}
+                                onChange={(e) => setAnonymous(e.target.checked)}
+                                color="primary"
+                            />
+                        }
+                        label="Make donation anonymous"
+                        sx={{ mb: 4 }}
+                    />
+
+                    {donationAmount && donationAmount > 0 && (
+                        <PaymentForm
+                            applicationId={process.env.REACT_APP_SQUARE_APP_ID}
+                            locationId="main"
+                            cardTokenizeResponseReceived={cardTokenizeResponseReceived}
+                            createPaymentRequest={createPaymentRequest}
+                            styling={{
+                                variables: {
+                                    colorPrimary: theme.palette.primary.main,
+                                    colorBackground: '#ffffff',
+                                    fontFamily: theme.typography.fontFamily,
+                                },
+                                'button[type="submit"]': {
+                                    backgroundColor: `${theme.palette.primary.main} !important`,
+                                    color: '#ffffff !important',
+                                    '&:hover': {
+                                        backgroundColor: `${theme.palette.primary.dark} !important`,
+                                    }
+                                }
+                            }}
+                        >
+                            <CreditCard />
+                        </PaymentForm>
+                    )}
+
+                    {paymentError && (
+                        <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>
+                            {paymentError}
+                        </Typography>
+                    )}
                 </form>
             </Container>
-        </div>
+
+
         </ThemeProvider>
     );
-  }
+}

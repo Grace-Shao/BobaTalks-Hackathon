@@ -1,76 +1,92 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import React, { useState } from 'react';
-import { alpha } from '@mui/material';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../styles/style.css';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
-const theme = createTheme({
-  palette: {
-    custom: {
-      main: '#FFFFFF',
-      light: '#FFFFFF',
-      dark: '#FFFFFF',
-      contrastText: '#FFFFFF',
-    },
-  },
-});
 
 export default function SignInForm() {
+  const theme = useTheme();
+
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    login({ email, password });
-    navigate('/');
+    try {
+      await login(formData);
+      navigate('/');
+    } catch (error) {
+      // Add error handling logic here, like displaying an error message
+      console.error('Login failed:', error);
+    }
+  };
+
+  const containerStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    pt: { xs: 11, sm: 11 },
+    pb: { xs: 8, sm: 12 },
+    maxWidth: 0,
+    width: '100%',
+    bgcolor: '#EDAB6F',
+    minHeight: '100vh',
+  };
+
+  const textFieldStyles = {
+    mt: 1,
+    border: '2px solid',
+    borderColor: 'black',
+    background: '#FFFFFF',
+    width: 500,
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container
-      className = "width-no-space"
-      disableGutters
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          pt: { xs: 11, sm: 11},
-          pb: { xs: 8, sm: 12 },
-          // px: {xs: 80, sm:80},
-          maxWidth: 0,
-          width: '100%',
-          bgcolor: '#EDAB6F',
-          minHeight: '100vh',
-        }}
+    <Container className="width-no-space" disableGutters sx={containerStyles}>
+      <span className="circle"></span>
+      <Typography
+        sx={{ fontFamily: 'Poppins', padding: 2, color: '#021944', fontWeight: 'bold' }}
+        variant="h4"
+        component="div"
       >
-        <span className="circle"></span>
-        <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold'}} variant="h4" component="div">
-          Enter account details
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField 
-            sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 500}} 
-            id="outlined-basic" label="Email Address" variant="outlined" 
-            value={email} onChange={e => setEmail(e.target.value)} />
-          <TextField 
-            sx={{mt: 1, border: '2px solid', borderColor: 'black', background: '#FFFFFF', width: 500}} 
-            id="outlined-basic" label="Password" variant="outlined" 
-            value={password} onChange={e => setPassword(e.target.value)} />
-          <Button sx={{mt: 1}} color="custom" variant="outlined" onClick={handleSubmit}> Login </Button>
-        </form>
-      </Container>
-      </ThemeProvider>
+        Enter account details
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          sx={textFieldStyles}
+          id="email"
+          label="Email Address"
+          name="email"
+          type="email"
+          variant="outlined"
+          value={formData.email}
+          onChange={handleInputChange}
+        />
+        <TextField
+          sx={textFieldStyles}
+          id="password"
+          label="Password"
+          name="password"
+          type="password"
+          variant="outlined"
+          value={formData.password}
+          onChange={handleInputChange}
+        />
+        <Button sx={{ mt: 1 }} color="primary" variant="outlined" type="submit">
+          Login
+        </Button>
+      </form>
+    </Container>
   );
 }

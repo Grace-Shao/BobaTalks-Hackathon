@@ -27,7 +27,7 @@ export default function Hero() {
           // height:'100%'
         }}
       >
-        <img draggable="false" src={require('./mascot.png')} />
+        <img draggable="false" src={require('../imgs/mascot.png')} />
         {/* <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '100%' } }}>
         
           </Stack> */}

@@ -1,82 +1,79 @@
 import { useState, useEffect } from 'react';
 import EventCard from "../components/EventCard";
-import Navbar from "../components/Navbar";
 import axios from 'axios';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom'
+import Grid from '@mui/material/Grid';
 import '../styles/Card.css'
-import Button from '@mui/material/Button';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme({
-  palette: {
-    custom: {
-      main: '#FFFFFF',
-      light: '#FFFFFF',
-      dark: '#FFFFFF',
-      contrastText: '#FFFFFF',
-    },
-  },
-});
 
 export default function EventsPage() {
-  const [events, setEvents] = useState([]); 
+  const [events, setEvents] = useState([]);
+
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_ENDPOINT}/events`)
-      .then(response => {
-        let events = []
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/events`,
+          { withCredentials: true }
+        );
 
-        for (let event of response.data) {
-          let newEvent = {
-            ...event,
-            end_date: new Date(event.end_date),
-            start_date: new Date(event.start_date)
-          }
-
-          events.push(newEvent)
-        }
+        const events = response.data.map(event => ({
+          ...event,
+          endDate: new Date(event.endDate),
+          startDate: new Date(event.startDate)
+        }));
 
         setEvents(events);
-      })
-      .catch(error => {
+      } catch (error) {
         console.log(error);
-      });
-    }, []);
-    
-    return (
-    <ThemeProvider theme={theme}>
-          {/* <AppBar
-            position="fixed"
-            sx={{
-              boxShadow: 0,
-              bgcolor: 'transparent',
-              backgroundImage: 'none',
-              mt: 2,
-            }}
-          ></AppBar> */}
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  return (
+    <>
       <Container
-        className = "width-no-space"
+        className="width-no-space"
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           pt: { xs: 12, sm: 12 },
           pb: { xs: 12, sm: 12 },
-          px: 0,
+          px: { xs: 2, sm: 4 },
           backgroundColor: '#D3E9FF',
           minHeight: '100vh',
         }}
       >
-        <Navbar />
-        <Typography sx={{fontFamily: "Poppins", padding: 2, color:'#021944', fontWeight: 'bold', textAlign: 'left'}} variant="h4" component="div">
-        Upcoming Events
+        <Typography
+          sx={{
+            fontFamily: "Poppins",
+            mb: 4,
+            color: '#021944',
+            fontWeight: 'bold',
+            width: '100%',
+            textAlign: { xs: 'center', sm: 'left' }
+          }}
+          variant="h4"
+        >
+          Upcoming Events
         </Typography>
-        {
-          events && events.length > 0 ? events.map((event, index) => 
-            <EventCard event={event} key={index} manageEventView={false}/>
-          ) : <h3>No events found</h3>
-        }
+
+
+        <Grid container spacing={3} justifyContent="center">
+          {events && events.length > 0 ? (
+            events.map((event, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <EventCard event={event} manageEventView={false} />
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="h6">No events found</Typography>
+          )}
+        </Grid>
       </Container>
-      </ThemeProvider>
-    );
-  }
+    </>
+  );
+}

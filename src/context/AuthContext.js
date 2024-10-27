@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext(null);
@@ -7,25 +7,58 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    
+    async function fetchUser() {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/auth/me`, 
+          { withCredentials: true });
+        
+        console.log(response)
+
+        if (response.status === 200) {
+          let userData =  response.data.user;
+          setUser(userData)
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log('No User Found:', error.response ? error.response.data : error.message);
+        setUser(null);
+        setLoading(false);
+      }
+    }
+
+    fetchUser();
+  }, [])
 
   const signup = async (userData) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/users/signup`, userData);
-      login(userData); 
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/api/auth/signup`, userData);
     } catch (error) {
       console.error('Signup error:', error.response ? error.response.data : error.message);
     }
   }
 
-
   const login = async (credentials) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/users/login`, credentials);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/auth/login`, 
+        credentials,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      console.log({ 'login response': response})
       
       if (response.status === 200) {
-        let userData = { email: credentials.email }
+        let userData =  response.data.user;
         setUser(userData)
-        localStorage.setItem('user', JSON.stringify(userData));  // Save to local storage, can probably replace with cookie
       }
     } catch (error) {
       console.error('Login error:', error.response ? error.response.data : error.message);
@@ -38,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, signup, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
