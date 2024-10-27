@@ -175,7 +175,7 @@ export default function ViewEventPage() {
                             whiteSpace: 'pre-line'  // This preserves line breaks in the description
                         }}
                     >
-                        {event.eventDescription}
+                        {event.description}
                     </Typography>
 
                     <Button
