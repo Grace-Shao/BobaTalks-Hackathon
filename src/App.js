@@ -13,6 +13,7 @@ import ManageEventPage from "./pages/ManageEventPage";
 import EditEventPage from "./pages/EditEventsPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import ViewEventPage from "./pages/ViewEventPage";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -37,7 +38,15 @@ const App = () => {
               }
             />
             <Route
-              path="/EventsPage/DonatePage/:id"
+              path="/EventsPage/:id"
+              element={
+                <ProtectedRoute>
+                  <ViewEventPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/donate/:id"
               element={
                 <ProtectedRoute>
                   <DonatePage />

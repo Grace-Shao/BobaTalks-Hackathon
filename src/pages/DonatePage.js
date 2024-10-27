@@ -137,8 +137,6 @@ export default function DonatePage() {
                     </Alert>
                 )}
 
-
-
                 <Typography
                     variant="h4"
                     component="h1"
