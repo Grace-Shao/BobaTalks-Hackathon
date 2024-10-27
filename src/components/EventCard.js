@@ -73,8 +73,9 @@ export default function EventCard({ event, manageEventView, deleteEvent }) {
                                     flex: 1,
                                     mr: 1,
                                     height: '20px',
-                                    borderRadius: '20px',
+                                    borderRadius: '4px',
                                     backgroundColor: 'white',
+                                    border: '1px solid black',
                                     '& .MuiLinearProgress-bar': {
                                         borderRadius: '20px',
                                         backgroundColor: 'green.500',
