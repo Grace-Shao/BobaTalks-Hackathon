@@ -1,6 +1,7 @@
 import express from "express"
 import eventsRouter from './events.js'
 import authRouter from './auth.js'
+import usersRouter from './users.js'
 
 const router = express.Router()
 
@@ -11,5 +12,6 @@ router.get('/', (req, res) => {
 
 router.use('/auth', authRouter)
 router.use('/events', eventsRouter)
+router.use('/users', usersRouter)
 
 export default router

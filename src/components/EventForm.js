@@ -10,6 +10,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }) => {
   const [formValues, setFormValues] = useState({
@@ -21,13 +22,24 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(null);
+  const [allOrganizerEmails, setAllOrganizerEmails] = useState([]);
 
-  const allOrganizerEmails = [
-    'a@gmail.com',
-    'alexander.shen@gmail.com',
-    'b@gmail.com',
-    'c@gmail.com'
-  ]
+  useEffect(() => {
+    const fetchOrganizers = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/users/organizers`);
+        console.log(response)
+        const organizerEmails = response.data.organizers.map((organizer) => organizer.email);
+        setAllOrganizerEmails(organizerEmails);
+      } catch (error) {
+        console.error('Failed to fetch organizers:', error);
+      }
+    };
+
+    fetchOrganizers();
+  }, []);
+
+  console.log("allOrganizerEmails", allOrganizerEmails)
 
   const handleChange = (field, e, value) => {
     console.log("handle change")
