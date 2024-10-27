@@ -15,8 +15,8 @@ import axios from 'axios';
 const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }) => {
   const [formValues, setFormValues] = useState({
     ...initialFormValues,
-    startDate: dayjs(),
-    endDate: dayjs()
+    startDate: initialFormValues.startDate || dayjs(),
+    endDate: initialFormValues.endDate || dayjs()
   });
 
   const [errors, setErrors] = useState({});
@@ -38,8 +38,6 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }
 
     fetchOrganizers();
   }, []);
-
-  console.log("allOrganizerEmails", allOrganizerEmails)
 
   const handleChange = (field, e, value) => {
     console.log("handle change")
@@ -63,7 +61,7 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }
     const newErrors = {};
 
     // Required Fields: currentMoney, goalAmount, eventName, organizers, startDate, endDate
-    if (!formValues.currentMoney) {
+    if (formValues.currentMoney === undefined || formValues.currentMoney === '') {
       newErrors.currentMoney = 'Current money is required';
     } else if (Number(formValues.currentMoney) < 0) {
       newErrors.currentMoney = 'Current money cannot be negative';

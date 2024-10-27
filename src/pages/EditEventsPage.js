@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { useAuth } from '../context/AuthContext';
 import EventForm from '../components/EventForm';
+import dayjs from 'dayjs';
 
 export default function EditEventPage() {
     const [event, setEvent] = useState()
@@ -44,8 +45,8 @@ export default function EditEventPage() {
                     goalAmount,
                     organizers,
                     description: eventDescription,
-                    startDate: new Date(startDate).toISOString().substring(0, 10),
-                    endDate: new Date(endDate).toISOString().substring(0, 10),
+                    startDate: dayjs(startDate),
+                    endDate: dayjs(endDate),
                     imageUrl
                 });
             } catch (error) {
