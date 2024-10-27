@@ -95,24 +95,6 @@ export default function DonatePage() {
         }
     };
 
-    // const submitDonation = async (event) => {
-    //     console.log("submitDonation");
-    //     event.preventDefault();
-    //     const data = {
-    //         "donation_amount": donationAmount,
-    //         "thank_you_note": thankYouNote,
-    //         anonymous: false,
-    //     };
-
-    //     try {
-    //         await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
-    //         console.log('Donation submitted');
-    //         alert('Thank you for the donation!');
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
     // not doing anything with the other fields for now
     const handleChange = (event) => {
         setThankYouNote(event.target.value);
