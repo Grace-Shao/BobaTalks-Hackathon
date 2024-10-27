@@ -20,6 +20,7 @@ router.get("/", isAuthenticated, async (req, res) => {
             $and: [
               { $lt: ["$currentMoney", "$goalAmount"] },
               { $gte: ["$endDate", today] },
+              { $ne: ["$toDelete", true] },
             ],
           },
         },
@@ -42,7 +43,10 @@ router.get("/user", isAuthenticated, async (req, res) => {
 
     if (!user) return res.status(404).send("User not found");
 
-    const events = await Event.find({ organizerIds: user._id }).lean();
+    const events = await Event.find({ 
+      organizerIds: user._id,
+      toDelete: { $ne: true }, 
+    }).lean();
 
     if (!events) return res.status(404).send("No events found.");
 
@@ -68,7 +72,10 @@ router.get("/:id", isAuthenticated, async (req, res) => {
   const user = req.user;
 
   try {
-    let result = await Event.findById(req.params.id).lean(); // Mongoose simplifies finding by ID
+    let result = await Event.findOne({
+      _id: req.params.id,
+      toDelete: { $ne: true }
+    }).lean();
 
     if (!result) {
       return res.status(404).send("Not found");
@@ -244,5 +251,35 @@ router.put("/donate/:id", isAuthenticated, async (req, res) => {
     }
   }
 });
+
+/**
+ * Soft delete an event by setting toDelete flag
+ */
+router.delete("/:id", isAuthenticated, async (req, res) => {
+  const eventId = req.params.id;
+  const user = req.user;
+
+  try {
+    const event = await Event.findById(eventId);
+    
+    if (!event) {
+      return res.status(404).send({ error: "Event not found" });
+    }
+
+    // Check if user is an organizer
+    if (!event.organizerIds.includes(user._id) && user.role !== 'admin') {
+      return res.status(403).send({ error: "Not authorized to delete this event" });
+    }
+
+    event.toDelete = true;
+    await event.save();
+
+    res.status(200).send({ message: "Event marked for deletion successfully" });
+  } catch (err) {
+    console.error("Error deleting event:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
 
 export default router;

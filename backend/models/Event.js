@@ -56,6 +56,10 @@ const eventSchema = new mongoose.Schema({
       }
     },
   ],
+  toDelete: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const Event = mongoose.model('event', eventSchema);
