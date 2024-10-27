@@ -120,6 +120,19 @@ export default function DonatePage() {
 
     return (
         <ThemeProvider theme={theme}>
+
+            {isProcessing && (
+                <CircularProgress
+                    sx={{
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 1000
+                    }}
+                />
+            )}
+
             <Container maxWidth="sm" sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -127,7 +140,10 @@ export default function DonatePage() {
                 pt: { xs: 4, sm: 6 },
                 pb: { xs: 4, sm: 6 },
                 minHeight: '100vh',
-                gap: 2
+                gap: 2,
+                opacity: isProcessing ? 0.5 : 1,
+                pointerEvents: isProcessing ? 'none' : 'auto',
+                position: 'relative'
             }}>
                 {success && (
                     <Alert
@@ -139,17 +155,7 @@ export default function DonatePage() {
                     </Alert>
                 )}
 
-                {isProcessing && (
-                    <CircularProgress
-                        sx={{
-                            position: 'fixed',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            zIndex: 1000
-                        }}
-                    />
-                )}
+
 
                 <Typography
                     variant="h4"
