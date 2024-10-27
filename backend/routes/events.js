@@ -206,30 +206,32 @@ router.put("/:id", isAuthenticated, async (req, res) => {
 /**
  * Donate to an existing event
  */
-router.put("/donate/:id", isAuthenticated, async (req, res) => {
+router.put("/donate/:id", async (req, res) => {
   const user = req.user;
-
   const eventId = req.params.id;
-  let { donation } = req.body;
+  let { 
+    anonymous,
+    donation_amount,
+    thank_you_note 
+  } = req.body;
 
-  if (!donation) {
+  if (!donation_amount) {
     return res.status(400).send({ error: "Donation is empty" });
+  } else if (donation_amount < 0) {
+    return res.status(400).send({ error: "Donation amount must be positive" });
   }
 
   try {
-    donation = {
-      ...donation,
+    const donation = {
+      amount: donation_amount,
       userId: user._id,
+      message: thank_you_note,
+      anonymous
     }
 
     const originalEvent = await Event.findById(eventId);
     if (!originalEvent) {
       return res.status(404).send({ error: "Event to donate to not found" });
-    }
-
-    // Update fields (only if they are provided and valid)
-    if (donation.amount == undefined) {
-      return res.status(400).send({ error: "Donation amount is required" });
     }
 
     originalEvent.currentMoney += donation.amount;

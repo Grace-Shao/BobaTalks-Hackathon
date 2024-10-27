@@ -10,6 +10,8 @@ import Grid from '@mui/material/Grid';
 import { ThemeProvider } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import {
     PaymentForm,
@@ -21,6 +23,7 @@ import theme from '../theme';
 export default function DonatePage() {
     const { id } = useParams();
     const [donationAmount, setDonationAmount] = useState(7);
+    const [anonymous, setAnonymous] = useState(false);
     const [thankYouNote, setThankYouNote] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [donateAmountError, setDonateAmountError] = useState('');
@@ -68,17 +71,22 @@ export default function DonatePage() {
                 sourceId: token.token,
                 donation_amount: donationAmount,
                 thank_you_note: thankYouNote,
-                anonymous: false,
+                anonymous: anonymous,
             };
 
-            await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
+            await axios.put(
+                `${process.env.REACT_APP_API_ENDPOINT}/api/events/donate/${id}`,
+                data,
+                {
+                    withCredentials: true
+                }
+            );
 
             // redirect to all events page
             setSuccess(true);
             setDonationAmount(7);
             setThankYouNote('');
             console.log('Donation submitted');
-            alert('Thank you for the donation!');
         } catch (error) {
             setPaymentError('Payment failed. Please try again.');
             console.error('Error:', error);
@@ -87,22 +95,23 @@ export default function DonatePage() {
         }
     };
 
-    const submitDonation = async (event) => {
-        event.preventDefault();
-        const data = {
-            "donation_amount": donationAmount,
-            "thank_you_note": thankYouNote,
-            anonymous: false,
-        };
+    // const submitDonation = async (event) => {
+    //     console.log("submitDonation");
+    //     event.preventDefault();
+    //     const data = {
+    //         "donation_amount": donationAmount,
+    //         "thank_you_note": thankYouNote,
+    //         anonymous: false,
+    //     };
 
-        try {
-            await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
-            console.log('Donation submitted');
-            alert('Thank you for the donation!');
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    //     try {
+    //         await axios.put(`${process.env.REACT_APP_API_ENDPOINT}/events/donate/${id}`, data);
+    //         console.log('Donation submitted');
+    //         alert('Thank you for the donation!');
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
     // not doing anything with the other fields for now
     const handleChange = (event) => {
@@ -180,7 +189,7 @@ export default function DonatePage() {
                     All donation amounts are in CAD.
                 </Typography>
 
-                <form onSubmit={submitDonation} style={{ width: '100%' }}>
+                <form style={{ width: '100%' }}>
                     <Grid container spacing={2} sx={{ mb: { ms: 3, sm: 4 } }}>
                         <Grid item xs={6} sm={6}>
                             <Button
@@ -274,6 +283,28 @@ export default function DonatePage() {
                         }}
                         error={!!donateAmountError}
                         helperText={donateAmountError}
+                    />
+
+                    <TextField
+                        fullWidth
+                        label="Thank You Note (Optional)"
+                        multiline
+                        rows={4}
+                        value={thankYouNote}
+                        onChange={(e) => setThankYouNote(e.target.value)}
+                        sx={{ mb: 4 }}
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={anonymous}
+                                onChange={(e) => setAnonymous(e.target.checked)}
+                                color="primary"
+                            />
+                        }
+                        label="Make donation anonymous"
+                        sx={{ mb: 4 }}
                     />
 
                     {donationAmount && donationAmount > 0 && (
