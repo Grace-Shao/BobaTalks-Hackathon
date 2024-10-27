@@ -27,7 +27,15 @@ router.get("/", isAuthenticated, async (req, res) => {
       },
     ]);
 
-    res.status(200).send(results);
+    const eventsWithOrganizers = await Promise.all(results.map(async (event) => {
+      const organizers = await User.find({ _id: { $in: event.organizerIds } }, 'email');
+      return {
+        ...event,
+        organizers: organizers.map(user => user.email)
+      };
+    }));
+
+    res.status(200).send(eventsWithOrganizers);
   } catch (err) {
     console.error("Error fetching events:", err);
     res.status(500).send("Error fetching events");

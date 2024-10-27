@@ -14,12 +14,13 @@ const PLACEHOLDER_IMAGE = "https://developers.elementor.com/docs/assets/img/elem
 
 export default function EventCard({ event, manageEventView, deleteEvent }) {
     const progress = (event.currentMoney / event.goalAmount) * 100;
+    console.log(event);
 
     return (
         <Card
             sx={{
                 border: '1px solid black',
-                height: { xs: '500px', sm: '450px' },
+                height: { xs: '600px', sm: '550px' },
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -43,8 +44,10 @@ export default function EventCard({ event, manageEventView, deleteEvent }) {
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary">
-                    Organized by: {event.organizers}
-                </Typography>
+                    Organized by: {Array.isArray(event.organizers) 
+                        ? `${event.organizers.slice(0, 3).join(', ')}${event.organizers.length > 3 ? ' ...' : ''}`
+                        : event.organizers}
+                </Typography> 
 
                 <Typography
                     variant="body2"
@@ -57,7 +60,7 @@ export default function EventCard({ event, manageEventView, deleteEvent }) {
                         WebkitBoxOrient: 'vertical',
                     }}
                 >
-                    {event.eventDescription}
+                    {event.description}
                 </Typography>
 
                 <Box sx={{ mt: 'auto' }}>

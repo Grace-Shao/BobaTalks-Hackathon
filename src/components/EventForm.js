@@ -28,7 +28,6 @@ const CreateEventForm = ({ initialFormValues, currentUserEmail, submitCallback }
     const fetchOrganizers = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/users/organizers`);
-        console.log(response)
         const organizerEmails = response.data.organizers.map((organizer) => organizer.email);
         setAllOrganizerEmails(organizerEmails);
       } catch (error) {

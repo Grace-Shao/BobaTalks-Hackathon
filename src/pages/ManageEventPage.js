@@ -5,12 +5,9 @@ import { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import EventCard from '../components/EventCard';
 import Typography from '@mui/material/Typography';
-import { useAuth } from '../context/AuthContext';
+import Grid from '@mui/material/Grid';
 
 export default function ManageEventPage() {
-
-  const { user } = useAuth();
-
   const [events, setEvents] = useState([]);
 
   const getEvents = async () => {
@@ -58,21 +55,39 @@ export default function ManageEventPage() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
         pt: { xs: 12, sm: 12 },
         pb: { xs: 12, sm: 12 },
-        px: 0,
+        px: { xs: 2, sm: 4 },
         backgroundColor: '#D3E9FF',
         minHeight: '100vh',
       }}
     >
-      <Typography sx={{ fontFamily: "Poppins", padding: 2, color: '#021944', fontWeight: 'bold', textAlign: 'left' }} variant="h4" component="div">
+      <Typography
+        sx={{
+          fontFamily: "Poppins",
+          mb: 4,
+          color: '#021944',
+          fontWeight: 'bold',
+          width: '100%',
+          textAlign: { xs: 'center', sm: 'left' }
+        }}
+        variant="h4"
+      >
         Manage Events
       </Typography>
-      {
-        events && events.length > 0 ? events.map((event, index) =>
-          <EventCard event={event} key={index} manageEventView={true} deleteEvent={deleteEvent} />
-        ) : <h3>No events to manage</h3>
-      }
+
+      <Grid container spacing={3} justifyContent="center">
+        {events && events.length > 0 ? (
+          events.map((event, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <EventCard event={event} manageEventView={true} deleteEvent={deleteEvent} />
+            </Grid>
+          ))
+        ) : (
+          <Typography variant="h6">No events to manage</Typography>
+        )}
+      </Grid>
     </Container>
   );
 }
