@@ -23,21 +23,23 @@ export default function DonatePage() {
     const [donationAmount, setDonationAmount] = useState(7);
     const [thankYouNote, setThankYouNote] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
-    const [error, setError] = useState(null);
+    const [donateAmountError, setDonateAmountError] = useState('');
+    const [paymentError, setPaymentError] = useState(null);
     const [success, setSuccess] = useState(false);
 
     const handleDonation = (amount) => {
-        setError(null);
+        setDonateAmountError('');
         const numAmount = Number(amount);
         if (isNaN(numAmount)) {
-            setError('Invalid donation amount');
+            setDonateAmountError('Invalid donation amount');
             return;
         }
         if (numAmount <= 0) {
-            setError('Donation amount must be greater than 0');
+            setDonateAmountError('Donation amount must be greater than 0');
             return;
         }
         setDonationAmount(Math.round(numAmount * 100) / 100);
+        return;
     }
 
     const cardTokenizeResponseReceived = async (token, buyer) => {
@@ -59,7 +61,7 @@ export default function DonatePage() {
     // Update submitDonation for Square
     const handlePaymentSubmit = async (token) => {
         setIsProcessing(true);
-        setError(null);
+        setPaymentError(null);
 
         try {
             const data = {
@@ -78,7 +80,7 @@ export default function DonatePage() {
             console.log('Donation submitted');
             alert('Thank you for the donation!');
         } catch (error) {
-            setError('Payment failed. Please try again.');
+            setPaymentError('Payment failed. Please try again.');
             console.error('Error:', error);
         } finally {
             setIsProcessing(false);
@@ -270,8 +272,8 @@ export default function DonatePage() {
                             min: 0,
                             step: "0.01"
                         }}
-                        error={!!error}
-                        helperText={error}
+                        error={!!donateAmountError}
+                        helperText={donateAmountError}
                     />
 
                     {donationAmount && donationAmount > 0 && (
@@ -299,9 +301,9 @@ export default function DonatePage() {
                         </PaymentForm>
                     )}
 
-                    {error && (
+                    {paymentError && (
                         <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>
-                            {error}
+                            {paymentError}
                         </Typography>
                     )}
                 </form>
